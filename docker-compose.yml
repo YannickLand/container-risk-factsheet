@@ -1,0 +1,40 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: config/docker/Dockerfile.api
+    image: container-risk-factsheet-api:latest
+    container_name: factsheet-api
+    ports:
+      - "5004:5004"
+    environment:
+      - API_PORT=5004
+      - DATA_DIR=/app/data
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./data:/app/data:ro
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - factsheet-internal
+
+  backend:
+    build:
+      context: .
+      dockerfile: config/docker/Dockerfile.backend
+    image: container-risk-factsheet-backend:latest
+    container_name: factsheet-backend
+    environment:
+      - BACKEND_PORT=8000
+      - DATA_DIR=/app/data
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./data:/app/data:ro
+    restart: unless-stopped
+    networks:
+      - factsheet-internal
+
+networks:
+  factsheet-internal:
+    internal: true

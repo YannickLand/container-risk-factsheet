@@ -1,0 +1,436 @@
+# trait_definitions.yaml
+# ---------------------------------------------------------------------------
+# Metadata catalogue for container deployment traits.
+#
+# This file documents all traits that the extractor can detect.
+# Detection logic lives in factsheet/trait_extractor.py — this YAML is the
+# single source of truth for trait IDs, descriptions, and categories.
+# It is also used to drive the "generate-compose" reverse workflow.
+# ---------------------------------------------------------------------------
+
+categories:
+  - id: capability
+    label: "Linux Capabilities"
+    description: "Traits related to Linux capability grants or drops."
+  - id: namespace
+    label: "Namespace Sharing"
+    description: "Traits related to sharing host namespaces."
+  - id: filesystem
+    label: "Filesystem & Volumes"
+    description: "Traits related to filesystem access and volume mounts."
+  - id: network
+    label: "Networking"
+    description: "Traits related to network configuration."
+  - id: port
+    label: "Port Exposure"
+    description: "Traits related to port binding and exposure."
+  - id: identity
+    label: "Process Identity"
+    description: "Traits related to the user/group context of the container process."
+  - id: dependency
+    label: "Service Dependencies"
+    description: "Traits related to service dependency declarations."
+  - id: image
+    label: "Container Image"
+    description: "Traits related to the container image."
+  - id: dockerfile
+    label: "Dockerfile Analysis"
+    description: "Traits derived from Dockerfile static analysis."
+
+traits:
+  # -------------------------------------------------------------------------
+  # Capabilities — explicit additions
+  # -------------------------------------------------------------------------
+  - id: cap_add_ALL
+    category: capability
+    description: "All Linux capabilities added (CAP_ALL). Grants unrestricted kernel access."
+    detection: explicit_cap_add
+    cap: ALL
+
+  - id: cap_add_CAP_CHOWN
+    category: capability
+    description: "Added CAP_CHOWN: make arbitrary changes to file UIDs and GIDs."
+    detection: explicit_cap_add
+    cap: CHOWN
+
+  - id: cap_add_CAP_DAC_OVERRIDE
+    category: capability
+    description: "Added CAP_DAC_OVERRIDE: bypass file read, write, execute permission checks."
+    detection: explicit_cap_add
+    cap: DAC_OVERRIDE
+
+  - id: cap_add_CAP_DAC_READ_SEARCH
+    category: capability
+    description: "Added CAP_DAC_READ_SEARCH: bypass file read permission and directory read/execute checks."
+    detection: explicit_cap_add
+    cap: DAC_READ_SEARCH
+
+  - id: cap_add_CAP_FOWNER
+    category: capability
+    description: "Added CAP_FOWNER: bypass permission checks on operations requiring the filesystem UID of the process."
+    detection: explicit_cap_add
+    cap: FOWNER
+
+  - id: cap_add_CAP_FSETID
+    category: capability
+    description: "Added CAP_FSETID: do not clear set-user-ID and set-group-ID permission bits when a file is modified."
+    detection: explicit_cap_add
+    cap: FSETID
+
+  - id: cap_add_CAP_IPC_LOCK
+    category: capability
+    description: "Added CAP_IPC_LOCK: lock memory."
+    detection: explicit_cap_add
+    cap: IPC_LOCK
+
+  - id: cap_add_CAP_IPC_OWNER
+    category: capability
+    description: "Added CAP_IPC_OWNER: bypass permission checks for operations on System V IPC objects."
+    detection: explicit_cap_add
+    cap: IPC_OWNER
+
+  - id: cap_add_CAP_KILL
+    category: capability
+    description: "Added CAP_KILL: bypass permission checks for sending signals."
+    detection: explicit_cap_add
+    cap: KILL
+
+  - id: cap_add_CAP_LEASE
+    category: capability
+    description: "Added CAP_LEASE: establish leases on arbitrary files."
+    detection: explicit_cap_add
+    cap: LEASE
+
+  - id: cap_add_CAP_LINUX_IMMUTABLE
+    category: capability
+    description: "Added CAP_LINUX_IMMUTABLE: set FS_APPEND_FL and FS_IMMUTABLE_FL file attributes."
+    detection: explicit_cap_add
+    cap: LINUX_IMMUTABLE
+
+  - id: cap_add_CAP_MAC_ADMIN
+    category: capability
+    description: "Added CAP_MAC_ADMIN: MAC configuration and state changes."
+    detection: explicit_cap_add
+    cap: MAC_ADMIN
+
+  - id: cap_add_CAP_MAC_OVERRIDE
+    category: capability
+    description: "Added CAP_MAC_OVERRIDE: override Mandatory Access Control (MAC) policy."
+    detection: explicit_cap_add
+    cap: MAC_OVERRIDE
+
+  - id: cap_add_CAP_MKNOD
+    category: capability
+    description: "Added CAP_MKNOD: create special files using mknod(2)."
+    detection: explicit_cap_add
+    cap: MKNOD
+
+  - id: cap_add_CAP_NET_ADMIN
+    category: capability
+    description: "Added CAP_NET_ADMIN: perform various network-related operations."
+    detection: explicit_cap_add
+    cap: NET_ADMIN
+
+  - id: cap_add_CAP_NET_BIND_SERVICE
+    category: capability
+    description: "Added CAP_NET_BIND_SERVICE: bind a socket to Internet domain privileged ports."
+    detection: explicit_cap_add
+    cap: NET_BIND_SERVICE
+
+  - id: cap_add_CAP_NET_BROADCAST
+    category: capability
+    description: "Added CAP_NET_BROADCAST: make socket broadcasts and listen to multicasts."
+    detection: explicit_cap_add
+    cap: NET_BROADCAST
+
+  - id: cap_add_CAP_NET_RAW
+    category: capability
+    description: "Added CAP_NET_RAW: use RAW and PACKET sockets."
+    detection: explicit_cap_add
+    cap: NET_RAW
+
+  - id: cap_add_CAP_SETFCAP
+    category: capability
+    description: "Added CAP_SETFCAP: set file capabilities."
+    detection: explicit_cap_add
+    cap: SETFCAP
+
+  - id: cap_add_CAP_SETGID
+    category: capability
+    description: "Added CAP_SETGID: make arbitrary manipulations of process GIDs."
+    detection: explicit_cap_add
+    cap: SETGID
+
+  - id: cap_add_CAP_SETPCAP
+    category: capability
+    description: "Added CAP_SETPCAP: modify process capability sets."
+    detection: explicit_cap_add
+    cap: SETPCAP
+
+  - id: cap_add_CAP_SETUID
+    category: capability
+    description: "Added CAP_SETUID: make arbitrary manipulations of process UIDs."
+    detection: explicit_cap_add
+    cap: SETUID
+
+  - id: cap_add_CAP_SYS_ADMIN
+    category: capability
+    description: "Added CAP_SYS_ADMIN: wide range of system administration operations."
+    detection: explicit_cap_add
+    cap: SYS_ADMIN
+
+  - id: cap_add_CAP_SYS_BOOT
+    category: capability
+    description: "Added CAP_SYS_BOOT: use reboot(2) and kexec_load(2)."
+    detection: explicit_cap_add
+    cap: SYS_BOOT
+
+  - id: cap_add_CAP_SYS_CHROOT
+    category: capability
+    description: "Added CAP_SYS_CHROOT: use chroot(2)."
+    detection: explicit_cap_add
+    cap: SYS_CHROOT
+
+  - id: cap_add_CAP_SYS_MODULE
+    category: capability
+    description: "Added CAP_SYS_MODULE: load and unload kernel modules."
+    detection: explicit_cap_add
+    cap: SYS_MODULE
+
+  - id: cap_add_CAP_SYS_NICE
+    category: capability
+    description: "Added CAP_SYS_NICE: lower the process nice value and change scheduling policies."
+    detection: explicit_cap_add
+    cap: SYS_NICE
+
+  - id: cap_add_CAP_SYS_PACCT
+    category: capability
+    description: "Added CAP_SYS_PACCT: use acct(2) process accounting."
+    detection: explicit_cap_add
+    cap: SYS_PACCT
+
+  - id: cap_add_CAP_SYS_PTRACE
+    category: capability
+    description: "Added CAP_SYS_PTRACE: trace arbitrary processes using ptrace(2)."
+    detection: explicit_cap_add
+    cap: SYS_PTRACE
+
+  - id: cap_add_CAP_SYS_RAWIO
+    category: capability
+    description: "Added CAP_SYS_RAWIO: perform I/O port operations."
+    detection: explicit_cap_add
+    cap: SYS_RAWIO
+
+  - id: cap_add_CAP_SYS_RESOURCE
+    category: capability
+    description: "Added CAP_SYS_RESOURCE: override resource limits."
+    detection: explicit_cap_add
+    cap: SYS_RESOURCE
+
+  - id: cap_add_CAP_SYS_TIME
+    category: capability
+    description: "Added CAP_SYS_TIME: set system clock."
+    detection: explicit_cap_add
+    cap: SYS_TIME
+
+  - id: cap_add_CAP_SYS_TTY_CONFIG
+    category: capability
+    description: "Added CAP_SYS_TTY_CONFIG: use vhangup(2) and employ various privileged ioctl(2) operations on virtual terminals."
+    detection: explicit_cap_add
+    cap: SYS_TTY_CONFIG
+
+  - id: cap_add_CAP_SYSLOG
+    category: capability
+    description: "Added CAP_SYSLOG: perform privileged syslog(2) operations."
+    detection: explicit_cap_add
+    cap: SYSLOG
+
+  - id: cap_add_CAP_WAKE_ALARM
+    category: capability
+    description: "Added CAP_WAKE_ALARM: trigger something that will wake up the system."
+    detection: explicit_cap_add
+    cap: WAKE_ALARM
+
+  - id: cap_add_CAP_AUDIT_CONTROL
+    category: capability
+    description: "Added CAP_AUDIT_CONTROL: enable and disable kernel auditing."
+    detection: explicit_cap_add
+    cap: AUDIT_CONTROL
+
+  - id: cap_add_CAP_AUDIT_READ
+    category: capability
+    description: "Added CAP_AUDIT_READ: allow reading the audit log via a multicast netlink socket."
+    detection: explicit_cap_add
+    cap: AUDIT_READ
+
+  - id: cap_add_CAP_AUDIT_WRITE
+    category: capability
+    description: "Added CAP_AUDIT_WRITE: write records to kernel auditing log."
+    detection: explicit_cap_add
+    cap: AUDIT_WRITE
+
+  - id: cap_add_CAP_BPF
+    category: capability
+    description: "Added CAP_BPF: employ privileged BPF operations."
+    detection: explicit_cap_add
+    cap: BPF
+
+  - id: cap_add_CAP_BLOCK_SUSPEND
+    category: capability
+    description: "Added CAP_BLOCK_SUSPEND: employ features that can block system suspend."
+    detection: explicit_cap_add
+    cap: BLOCK_SUSPEND
+
+  - id: cap_add_CAP_CHECKPOINT_RESTORE
+    category: capability
+    description: "Added CAP_CHECKPOINT_RESTORE: checkpoint/restore operations."
+    detection: explicit_cap_add
+    cap: CHECKPOINT_RESTORE
+
+  - id: cap_add_CAP_PERFMON
+    category: capability
+    description: "Added CAP_PERFMON: employ various performance-monitoring mechanisms."
+    detection: explicit_cap_add
+    cap: PERFMON
+
+  # -------------------------------------------------------------------------
+  # Capabilities — drops
+  # -------------------------------------------------------------------------
+  - id: cap_drop_all
+    category: capability
+    description: "All default capabilities dropped (cap_drop: ALL). Minimal capability set."
+    detection: cap_drop_all
+
+  # -------------------------------------------------------------------------
+  # Namespace sharing
+  # -------------------------------------------------------------------------
+  - id: host_pid
+    category: namespace
+    description: "Container shares the host PID namespace (pid: host)."
+    detection: field_equals
+    field: pid
+    value: host
+
+  - id: host_network
+    category: namespace
+    description: "Container uses the host network stack (network_mode: host)."
+    detection: field_equals
+    field: network_mode
+    value: host
+
+  - id: host_cgroup
+    category: namespace
+    description: "Container shares the host cgroup namespace (cgroup: host)."
+    detection: field_equals
+    field: cgroup
+    value: host
+
+  # -------------------------------------------------------------------------
+  # Security flags
+  # -------------------------------------------------------------------------
+  - id: privileged_flag
+    category: namespace
+    description: "Container runs in privileged mode (privileged: true)."
+    detection: bool_true
+    field: privileged
+
+  - id: read_only_filesystem
+    category: filesystem
+    description: "Container root filesystem is mounted read-only (read_only: true)."
+    detection: bool_true
+    field: read_only
+
+  # -------------------------------------------------------------------------
+  # Volumes
+  # -------------------------------------------------------------------------
+  - id: privileged_host_volume
+    category: filesystem
+    description: "Bind mount from a host path into the container (read_write or read_only)."
+    detection: host_bind_volume
+    types:
+      - read_write
+      - read_only
+
+  - id: named_volume
+    category: filesystem
+    description: "Named Docker volume mounted into the container."
+    detection: named_volume
+
+  # -------------------------------------------------------------------------
+  # Network
+  # -------------------------------------------------------------------------
+  - id: external_network
+    category: network
+    description: "Container is connected to an external (non-internal) Docker network."
+    detection: external_network
+
+  - id: internal_network
+    category: network
+    description: "Container is connected to an internal Docker network (no external access)."
+    detection: internal_network
+
+  - id: layer2_network
+    category: network
+    description: "Container is attached to a layer-2 network (macvlan or ipvlan driver)."
+    detection: layer2_network
+
+  # -------------------------------------------------------------------------
+  # Ports
+  # -------------------------------------------------------------------------
+  - id: privileged_port
+    category: port
+    description: "Container publishes a privileged host port (< 1024)."
+    detection: host_port_range
+    max: 1023
+
+  - id: unprivileged_port
+    category: port
+    description: "Container publishes an unprivileged host port (>= 1024)."
+    detection: host_port_range
+    min: 1024
+
+  - id: internal_port
+    category: port
+    description: "Container exposes a port internally via the 'expose' directive."
+    detection: expose_port
+
+  # -------------------------------------------------------------------------
+  # Process identity
+  # -------------------------------------------------------------------------
+  - id: non-root_user
+    category: identity
+    description: "Container process runs as a non-root user (user: <name>)."
+    detection: non_root_user
+
+  # -------------------------------------------------------------------------
+  # Dependencies & image
+  # -------------------------------------------------------------------------
+  - id: depends_on
+    category: dependency
+    description: "Service has explicit dependencies on other services (depends_on)."
+    detection: field_present
+    field: depends_on
+
+  - id: container_image_name
+    category: image
+    description: "Service specifies a container image (image field present)."
+    detection: field_present
+    field: image
+
+  # -------------------------------------------------------------------------
+  # Dockerfile analysis (set by Dockerfile analyser, not compose extractor)
+  # -------------------------------------------------------------------------
+  - id: dockerfile_analyzed
+    category: dockerfile
+    description: "Dockerfile was analysed by the static analysis tool."
+    detection: dockerfile_analysis
+
+  - id: dockerfile_no_findings
+    category: dockerfile
+    description: "Dockerfile static analysis found zero security issues."
+    detection: dockerfile_analysis
+
+  - id: dockerfile_template
+    category: dockerfile
+    description: "Dockerfile was generated from the project's hardened template."
+    detection: dockerfile_analysis

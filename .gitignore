@@ -1,0 +1,40 @@
+# Ignore the private reference implementation
+cli-tool/
+
+# Python artefacts
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Test / coverage artefacts
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+*.lcov
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets / config
+.env
+*.env.local
+secrets/
+
+# Data files that are too large for git
+# (uncomment if needed)
+# data/tra_model/

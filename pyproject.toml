@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "container-risk-factsheet"
+version = "1.0.0"
+description = "Generate Container Security Risk Factsheets from Docker Compose files"
+readme = "README.md"
+requires-python = ">=3.12"
+license = {text = "Apache-2.0"}
+keywords = ["container", "security", "docker", "risk", "factsheet", "ontology"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Topic :: Security",
+]
+
+dependencies = [
+    "click>=8.1",
+    "pyyaml>=6.0",
+    "flask>=3.0",
+    "flask-cors>=4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+]
+
+[project.scripts]
+factsheet = "factsheet.cli:cli"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["factsheet*", "api*", "backend*"]
+
+[tool.setuptools.package-data]
+"*" = ["data/**/*", "*.yaml", "*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]
