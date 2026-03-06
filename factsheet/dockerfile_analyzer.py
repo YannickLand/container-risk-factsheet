@@ -5,7 +5,7 @@ Hadolint (https://github.com/hadolint/hadolint) is an optional external binary.
 When not available, analysis is skipped gracefully and only a
 ``dockerfile_analyzed`` trait with ``available: false`` is emitted.
 
-Rule → trait mapping mirrors cli-tool/internal/dockerfile/traits.go.
+Rule → trait mapping covers the most common Hadolint DL/SC rule codes.
 """
 
 from __future__ import annotations
