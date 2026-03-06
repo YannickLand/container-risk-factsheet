@@ -1,0 +1,77 @@
+tags:
+  - Treatment
+summary: Generate a risk treatment report
+description: |
+  Runs the full factsheet pipeline and extracts risk treatment actions grouped
+  by risk level (Critical → High → Moderate → Low → Unknown).
+
+  The report is useful for prioritising security measures: each entry describes
+  a concrete treatment action, the threat it addresses, and the services affected.
+
+  Accepts the same inputs as `generate-factsheet` (Compose file, overrides,
+  optional Dockerfiles).
+operationId: generateTreatmentReport
+consumes:
+  - multipart/form-data
+parameters:
+  - in: formData
+    name: compose_file
+    type: file
+    required: true
+    description: The docker-compose.yml file to analyse.
+  - in: formData
+    name: overrides
+    type: string
+    required: false
+    description: JSON string of assumption-state overrides.
+    example: '{"NET-1": "Satisfied"}'
+  - in: formData
+    name: dockerfile_0
+    type: file
+    required: false
+    description: Dockerfile for the first service (positional order).
+  - in: formData
+    name: dockerfile_1
+    type: file
+    required: false
+    description: Dockerfile for the second service (positional order).
+responses:
+  200:
+    description: |
+      Per-service treatment report.  Each service entry contains:
+      - `summary`: counts per risk level
+      - `treatments_by_level`: treatment actions grouped by Critical/High/Moderate/Low
+      - `all_treatments`: flat deduplicated list of all treatment actions
+    schema:
+      type: object
+      additionalProperties:
+        type: object
+        properties:
+          summary:
+            type: object
+            additionalProperties:
+              type: integer
+          treatments_by_level:
+            type: object
+            additionalProperties:
+              type: array
+              items:
+                type: object
+          all_treatments:
+            type: array
+            items:
+              type: object
+  400:
+    description: Missing or invalid input.
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+  500:
+    description: Report generation failed.
+    schema:
+      type: object
+      properties:
+        error:
+          type: string

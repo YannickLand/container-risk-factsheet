@@ -1,0 +1,47 @@
+tags:
+  - Traits
+summary: Extract deployment traits
+description: |
+  Parses a Docker Compose file and extracts deployment traits for every service.
+  Traits describe observable deployment characteristics such as network exposure,
+  image source, runtime settings, and secrets handling.
+
+  This endpoint performs only trait extraction; it does not run the full factsheet
+  pipeline. Use `generate-factsheet` to also evaluate security assumptions and
+  identify risks.
+operationId: extractTraits
+consumes:
+  - multipart/form-data
+parameters:
+  - in: formData
+    name: compose_file
+    type: file
+    required: true
+    description: The docker-compose.yml file to analyse.
+responses:
+  200:
+    description: |
+      Per-service trait list keyed by service name.
+    schema:
+      type: object
+      additionalProperties:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "publicly_exposed"
+            name:
+              type: string
+              example: "Service is publicly exposed"
+            source:
+              type: string
+              example: "compose"
+  400:
+    description: Missing or invalid input.
+    schema:
+      type: object
+      properties:
+        error:
+          type: string

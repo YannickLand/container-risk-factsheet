@@ -7,18 +7,22 @@ from __future__ import annotations
 import io
 import yaml
 from factsheet.factsheet_generator import generate_factsheet
+from factsheet.treatment_report import extract_treatments
 from api.config import DATA_DIR
 
 
 def generate_factsheet_from_upload(
     file_content: bytes,
     overrides: dict[str, str] | None = None,
+    dockerfiles: list[str] | None = None,
 ) -> dict:
     """
     Parse *file_content* as YAML and generate a factsheet.
 
     :param file_content: Raw bytes of a docker-compose YAML file.
     :param overrides: Optional assumption-state overrides.
+    :param dockerfiles: Optional list of Dockerfile contents (raw strings),
+                        mapped positionally to services.
     :returns: Factsheet dict (keyed by service name).
     :raises ValueError: On YAML parse error.
     """
@@ -33,7 +37,21 @@ def generate_factsheet_from_upload(
             "(missing top-level 'services' key)."
         )
 
-    return generate_factsheet(compose, overrides=overrides, data_dir=DATA_DIR)
+    return generate_factsheet(
+        compose, overrides=overrides, data_dir=DATA_DIR, dockerfiles=dockerfiles
+    )
+
+
+def generate_treatment_report_from_upload(
+    file_content: bytes,
+    overrides: dict[str, str] | None = None,
+    dockerfiles: list[str] | None = None,
+) -> dict:
+    """Generate a factsheet and extract its risk treatment report."""
+    factsheet = generate_factsheet_from_upload(
+        file_content, overrides=overrides, dockerfiles=dockerfiles
+    )
+    return extract_treatments(factsheet)
 
 
 def generate_factsheet_from_dict(

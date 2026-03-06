@@ -3,6 +3,8 @@ cli.py — Command-line interface for container-risk-factsheet.
 
 Commands:
   generate-factsheet   Generate a security factsheet from a docker-compose file.
+  extract-traits       Extract deployment traits from a docker-compose file.
+  treatment-report     Extract a risk treatment report from a factsheet JSON file.
 """
 
 from __future__ import annotations
@@ -24,12 +26,33 @@ def _resolve_data_dir(data_dir: str | None) -> str:
 
 
 def _load_overrides(overrides_file: str | None) -> dict[str, str]:
-    """Load assumption overrides from a YAML or JSON file."""
+    """Load assumption overrides from a YAML, JSON, or .conf (KEY=Value) file."""
     if not overrides_file:
         return {}
+    _, ext = os.path.splitext(overrides_file)
     with open(overrides_file, "r", encoding="utf-8") as fh:
-        raw = yaml.safe_load(fh) or {}
+        content = fh.read()
+    if ext in (".conf", ".ini"):
+        result: dict[str, str] = {}
+        for line in content.splitlines():
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if "=" in line:
+                k, _, v = line.partition("=")
+                result[k.strip()] = v.strip()
+        return result
+    raw = yaml.safe_load(content) or {}
     return {str(k): str(v) for k, v in raw.items()}
+
+
+def _read_dockerfiles(paths: tuple[str, ...]) -> list[str]:
+    """Read Dockerfile contents from disk paths."""
+    contents: list[str] = []
+    for p in paths:
+        with open(p, "r", encoding="utf-8") as fh:
+            contents.append(fh.read())
+    return contents
 
 
 # ---------------------------------------------------------------------------
@@ -61,6 +84,18 @@ def cli():
     type=click.Path(exists=True, dir_okay=False),
 )
 @click.option(
+    "--dockerfile",
+    "dockerfiles",
+    multiple=True,
+    default=(),
+    help=(
+        "Path to a Dockerfile to analyse with Hadolint. "
+        "Map to services positionally (first --dockerfile → first service, etc.). "
+        "Can be specified multiple times."
+    ),
+    type=click.Path(exists=True, dir_okay=False),
+)
+@click.option(
     "--data-dir",
     default=None,
     help="Override the path to the data/ directory containing risk model files.",
@@ -75,6 +110,7 @@ def generate_factsheet(
     compose_file: str,
     output: str | None,
     overrides: str | None,
+    dockerfiles: tuple[str, ...],
     data_dir: str | None,
     pretty: bool,
 ) -> None:
@@ -85,10 +121,13 @@ def generate_factsheet(
         overrides_dict = _load_overrides(overrides)
         data_dir = _resolve_data_dir(data_dir)
 
+        dockerfile_contents = _read_dockerfiles(dockerfiles)
+
         factsheet = generate_factsheet_from_file(
             compose_file,
             overrides=overrides_dict,
             data_dir=data_dir,
+            dockerfiles=dockerfile_contents,
         )
 
         indent = 2 if pretty else None
@@ -146,6 +185,48 @@ def extract_traits(compose_file: str, service: str | None, pretty: bool) -> None
 
     indent = 2 if pretty else None
     click.echo(json.dumps(out, indent=indent, ensure_ascii=False))
+
+
+# ---------------------------------------------------------------------------
+# treatment-report
+# ---------------------------------------------------------------------------
+
+@cli.command("treatment-report")
+@click.argument("factsheet_file", type=click.Path(exists=True, dir_okay=False))
+@click.option(
+    "-o", "--output",
+    default=None,
+    help="Write JSON output to this file (default: stdout).",
+    type=click.Path(dir_okay=False, writable=True),
+)
+@click.option(
+    "--pretty/--no-pretty",
+    default=True,
+    help="Pretty-print JSON output (default: True).",
+)
+def treatment_report(factsheet_file: str, output: str | None, pretty: bool) -> None:
+    """Extract a risk treatment report from a generated FACTSHEET_FILE (JSON)."""
+    from factsheet.treatment_report import extract_treatments
+
+    try:
+        with open(factsheet_file, "r", encoding="utf-8") as fh:
+            factsheet = json.load(fh)
+
+        report = extract_treatments(factsheet)
+
+        indent = 2 if pretty else None
+        json_str = json.dumps(report, indent=indent, ensure_ascii=False)
+
+        if output:
+            with open(output, "w", encoding="utf-8") as fh:
+                fh.write(json_str)
+            click.echo(f"Treatment report written to {output}", err=True)
+        else:
+            click.echo(json_str)
+
+    except (FileNotFoundError, json.JSONDecodeError) as exc:
+        click.echo(f"Error: {exc}", err=True)
+        sys.exit(1)
 
 
 # ---------------------------------------------------------------------------

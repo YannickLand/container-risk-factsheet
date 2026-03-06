@@ -1,17 +1,51 @@
+# ─── Stage 1: fetch Hadolint binary ─────────────────────────────────────────
+# Pinned version — update intentionally when patching.
+FROM alpine:3.21 AS hadolint-stage
+RUN apk add --no-cache curl \
+    && curl -fsSL \
+       "https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64" \
+       -o /usr/local/bin/hadolint \
+    && chmod +x /usr/local/bin/hadolint \
+    && apk del curl \
+    && rm -rf /var/cache/apk/*
+
+# ─── Stage 2: runtime image ──────────────────────────────────────────────────
 FROM python:3.12-slim
+
+# Disable .pyc files; force stdout/stderr to be unbuffered for log visibility.
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# Install dependencies first for layer caching
-COPY pyproject.toml ./
+# Minimal system tools: curl is required for the HEALTHCHECK only.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Hadolint from stage 1 enables Dockerfile static analysis inside the container.
+COPY --from=hadolint-stage /usr/local/bin/hadolint /usr/local/bin/hadolint
+
+# Install Python dependencies in a separate layer so they are cached unless
+# pyproject.toml changes. README.md is required by the build metadata.
+COPY pyproject.toml README.md ./
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -e "."
 
-# Copy source code
+# Copy application source after pip so the dependency layer stays cached when
+# only source files change.
 COPY factsheet/ ./factsheet/
 COPY api/ ./api/
 COPY data/ ./data/
 
+# Drop to a dedicated non-root user (UID 10001 matches the Compose user directive).
+RUN useradd -u 10001 -s /sbin/nologin appuser \
+    && chown -R appuser /app
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+    CMD curl -fsS http://localhost:5004/api/v1/health || exit 1
+
 EXPOSE 5004
+USER 10001
 
 CMD ["python", "-m", "api.api_server"]

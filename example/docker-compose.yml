@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  analyzer:
+    image: analyzer:latest # Use the latest analyzer image
+    ports:
+      - "3000:3000"        # Map host port 3000 to container port 3000
+    pid: "host"            # Use host PID namespace
+    cap_drop:
+      - ALL                # Drop all capabilities
+    cap_add:
+      - SYS_PTRACE         # Add capability for ptrace
+    networks:
+      - reverse-proxy      # Connect to external reverse-proxy network
+    volumes:
+      - /var:/host-var     # Mount host /var directory
+        
+networks:
+  reverse-proxy:
+    external: true         # Use an external network named 'reverse-proxy'

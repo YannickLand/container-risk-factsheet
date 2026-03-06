@@ -1,138 +1,138 @@
 # Container Risk Factsheet
 
-A Python tool and REST API for generating **Container Security Risk Factsheets** from Docker Compose files. It analyzes a deployment's security posture by extracting deployment traits, evaluating security assumptions, matching a context scenario, and identifying possible attack actions — all grounded in the [CSRO ontology](https://w3id.org/csro).
+[![CI](https://github.com/YannickLand/container-risk-factsheet/actions/workflows/ci.yml/badge.svg)](https://github.com/YannickLand/container-risk-factsheet/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-## Overview
+A Python tool and REST API for generating **Container Security Risk Factsheets** from Docker Compose files.  It analyses a deployment's security posture by extracting deployment traits, evaluating security assumptions, matching a context scenario, and identifying possible attack actions — all grounded in the [CSRO ontology](https://w3id.org/csro).
 
-Given a `docker-compose.yml` file, the tool produces a structured JSON factsheet per service containing:
+---
 
-- **DeploymentTraits** — security-relevant properties detected in the compose file (capabilities, volumes, network, PID mode, etc.)
-- **ContainerSecurityAssumptionStates** — satisfaction states (`Satisfied` / `Unknown` / `Dissatisfied`) for 45 CSRO security assumptions
-- **MatchingContextScenario** — best-fit deployment scenario (e.g., *Hybrid Cloud Scenario*)
-- **PossibleAttackActions** — CSRO attack actions applicable to the matched scenario and current trait set
+## What it does
 
-## Quick Start
+Given a `docker-compose.yml` file, the tool produces a structured JSON factsheet per service:
 
-### CLI
+| Output section | Content |
+|----------------|---------|
+| `DeploymentTraits` | Security-relevant properties detected in the Compose file and optional Dockerfiles |
+| `ContainerSecurityAssumptionStates` | Satisfaction states (`Satisfied` / `Unknown` / `Dissatisfied`) for 45 CSRO assumptions |
+| `MatchingContextScenario` | Best-fit deployment scenario (e.g. *Hybrid Cloud*) |
+| `PossibleAttackActions` | CSRO attack actions applicable to the matched scenario and current trait set |
+
+A separate **treatment report** command groups risk remediation actions by severity (Critical → High → Moderate → Low).
+
+---
+
+## Quick start
 
 ```bash
-# Install (Python 3.12+ required)
+# Python 3.12+ required
+python -m venv .venv
+.venv\Scripts\Activate.ps1   # Windows
+source .venv/bin/activate    # macOS / Linux
+
 pip install -e .
 
 # Generate a factsheet
-factsheet generate-factsheet docker-compose.yml -o factsheet.json
-
-# Extract traits only
-factsheet extract-traits docker-compose.yml
-
-# Pretty-print JSON output
 factsheet generate-factsheet docker-compose.yml --pretty
+
+# Extract deployment traits only
+factsheet extract-traits docker-compose.yml --pretty
+
+# Generate a prioritised treatment report
+factsheet generate-factsheet docker-compose.yml -o factsheet.json
+factsheet treatment-report factsheet.json --pretty
+
+# Include Dockerfile static analysis (requires hadolint)
+factsheet generate-factsheet docker-compose.yml --dockerfile Dockerfile --pretty
+
+# Override assumption states
+factsheet generate-factsheet docker-compose.yml \
+  --overrides '{"NET-1":"Satisfied","IMG":"Satisfied"}' --pretty
 ```
 
-### Docker
-
+**Docker (API server):**
 ```bash
 docker compose up
-# API available at http://localhost:5004
+# Swagger UI: http://localhost:5004/api/docs
 ```
 
-## CLI Reference
+---
 
-### `factsheet generate-factsheet`
+## Documentation
 
-```
-Usage: factsheet generate-factsheet [OPTIONS] COMPOSE_FILE
+| | |
+|---|---|
+| **Tutorial** | [Getting Started — your first factsheet](docs/tutorials/getting-started.md) |
+| **How-to** | [Override assumption states](docs/how-to-guides/override-assumptions.md) |
+| **How-to** | [Analyse Dockerfiles with Hadolint](docs/how-to-guides/analyse-dockerfiles.md) |
+| **Reference** | [CLI commands](docs/reference/cli.md) |
+| **Reference** | [REST API endpoints](docs/reference/rest-api.md) |
+| **Explanation** | [How factsheet generation works](docs/explanation/how-factsheets-work.md) |
 
-  Generate a risk factsheet from a Docker Compose file.
-
-Options:
-  -o, --output FILE        Write JSON output to FILE (default: stdout)
-  --overrides FILE         YAML file with manual assumption state overrides
-  --data-dir DIR           Directory containing risk model data files
-  --pretty                 Pretty-print JSON output
-  --help                   Show this message and exit.
-```
-
-### `factsheet extract-traits`
-
-```
-Usage: factsheet extract-traits [OPTIONS] COMPOSE_FILE
-
-  Extract and list deployment traits from a Docker Compose file.
-
-Options:
-  --service NAME   Limit output to one service
-  --help           Show this message and exit.
-```
+---
 
 ## REST API
 
-The Flask API server runs on port `5004`.
+Start the server with `docker compose up` or `python -m api.api_server`.  
+Interactive Swagger UI: **`http://localhost:5004/api/docs`**
 
 | Method | Path | Description |
 |--------|------|-------------|
-| `GET`  | `/api/v1/health` | Health check |
+| `GET`  | `/api/v1/health` | Liveness check |
 | `GET`  | `/api/v1/version` | Version info |
-| `POST` | `/api/v1/generate-factsheet` | Generate factsheet (multipart: `compose_file` + optional `overrides`) |
-| `POST` | `/api/v1/extract-traits` | Extract traits (multipart: `compose_file`) |
-
-**Example:**
+| `POST` | `/api/v1/generate-factsheet` | Generate factsheet (`compose_file` + optional `overrides`, `dockerfile_N`) |
+| `POST` | `/api/v1/extract-traits` | Extract deployment traits (`compose_file`) |
+| `POST` | `/api/v1/generate-treatment-report` | Generate treatment report (`compose_file` + optional fields) |
 
 ```bash
 curl -X POST http://localhost:5004/api/v1/generate-factsheet \
-  -F "compose_file=@docker-compose.yml"
+  -F "compose_file=@docker-compose.yml" \
+  -F 'overrides={"NET-1":"Satisfied"}'
 ```
+
+---
 
 ## Architecture
 
 ```
 factsheet/               # Core Python package
-  compose_normalizer.py  # Canonicalize docker-compose multi-syntax fields
+  compose_normalizer.py  # Canonicalise docker-compose multi-syntax fields
   trait_extractor.py     # Detect security-relevant deployment traits
+  dockerfile_analyzer.py # Hadolint-based Dockerfile static analysis
   risk_model.py          # Load and navigate CSRO knowledge graph
   assumption_evaluator.py# Calculate assumption satisfaction states
   scenario_matcher.py    # Find best-matching context scenario
   factsheet_generator.py # Orchestrate the full pipeline
+  treatment_report.py    # Extract and group risk treatments
   cli.py                 # Click CLI entry point
 
-api/                     # Flask REST API
+api/                     # Flask REST API + Swagger UI (flasgger)
+  swagger_specs/         # Per-endpoint OpenAPI YAML specs
 backend/                 # stdlib HTTP backend server
-data/                    # Risk model data (JSONLD, schemas, definitions)
-tests/                   # pytest test suite (70 tests)
+data/                    # Risk model data (JSON-LD, schemas)
+tests/                   # pytest test suite (113 tests)
+docs/                    # Diataxis documentation
 ```
 
-## Data Model
-
-The risk model is loaded from:
-
-- `data/tra_model/query_results/15_full_csro/risk_export.jsonld` — CSRO knowledge graph (attack actions, assumptions, scenarios)
-- `data/tra_model/query_results/15_full_csro/rule_export.jsonld` — Treatment weights and scoring rules
-
-## Overrides
-
-To manually override an assumption's satisfaction state, create a YAML file:
-
-```yaml
-# overrides.yaml
-"non-root_user": "Satisfied"
-"read_only_root_filesystem": "Satisfied"
-```
-
-Pass it to the CLI: `factsheet generate-factsheet compose.yml --overrides overrides.yaml`
+---
 
 ## Development
 
 ```bash
-# Install with dev dependencies
 pip install -e ".[dev]"
 
-# Run tests
+# Run unit tests (fast, no external tools required)
+pytest -m "not integration"
+
+# Run all tests including integration (requires hadolint)
 pytest
 
-# Run tests with coverage
-pytest --cov=factsheet --cov-report=html
+# Run with coverage
+pytest --cov=factsheet --cov=api --cov-report=html
 ```
+
+---
 
 ## License
 
-Apache 2.0
+[MIT](LICENSE)

@@ -1,0 +1,17 @@
+tags:
+  - Health
+summary: API version information
+description: Returns the current API version and build metadata.
+operationId: version
+responses:
+  200:
+    description: Version information
+    schema:
+      type: object
+      properties:
+        api_version:
+          type: string
+          example: "1.0.0"
+        package_version:
+          type: string
+          example: "1.0.0"

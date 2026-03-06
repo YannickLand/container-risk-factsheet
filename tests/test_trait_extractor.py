@@ -5,7 +5,7 @@ from factsheet.compose_normalizer import normalize_compose
 from factsheet.trait_extractor import extract_traits, extract_all_traits, STANDARD_CAPABILITIES
 
 
-def _normalize_and_extract(service_config: dict, top_networks: dict = None):
+def _normalize_and_extract(service_config: dict, top_networks: dict | None = None):
     """Helper: normalise a single-service compose and extract traits."""
     compose = {
         "services": {"svc": service_config},

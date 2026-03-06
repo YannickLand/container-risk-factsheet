@@ -21,6 +21,7 @@ import yaml
 
 from factsheet.compose_normalizer import normalize_compose
 from factsheet.trait_extractor import extract_all_traits
+from factsheet.dockerfile_analyzer import analyze_dockerfile
 from factsheet.risk_model import (
     RiskModel,
     load_risk_model,
@@ -53,6 +54,7 @@ def generate_factsheet(
     compose: dict,
     overrides: dict[str, str] | None = None,
     data_dir: str | None = None,
+    dockerfiles: list[str] | None = None,
 ) -> dict:
     """
     Generate a factsheet for every service in *compose*.
@@ -62,10 +64,13 @@ def generate_factsheet(
                       manual override map.
     :param data_dir: Override path to the ``data/`` directory with risk model
                      files.  Defaults to ``../data`` relative to this file.
+    :param dockerfiles: Optional list of Dockerfile contents (raw strings).
+                        Mapped positionally to services in YAML order.
     :returns: ``{service_name: {ContainerSecurityAssumptionStates, ...}, ...}``
     """
     data_dir = data_dir or _DEFAULT_DATA_DIR
     overrides = overrides or {}
+    dockerfiles = dockerfiles or []
 
     # 1. Normalise compose
     normalised = normalize_compose(compose)
@@ -75,6 +80,15 @@ def generate_factsheet(
 
     # 3. Extract per-service traits
     per_service_traits = extract_all_traits(normalised)
+
+    # 3b. Integrate Dockerfile traits (positional mapping)
+    service_names = list(per_service_traits.keys())
+    for i, dockerfile_content in enumerate(dockerfiles):
+        if i >= len(service_names):
+            break
+        svc_name = service_names[i]
+        dockerfile_traits = analyze_dockerfile(dockerfile_content, svc_name)
+        per_service_traits[svc_name] = per_service_traits[svc_name] + dockerfile_traits
 
     # 4. Build factsheet per service
     result: dict = {}
@@ -111,11 +125,12 @@ def generate_factsheet_from_file(
     compose_path: str,
     overrides: dict[str, str] | None = None,
     data_dir: str | None = None,
+    dockerfiles: list[str] | None = None,
 ) -> dict:
     """Load a docker-compose file from disk and generate its factsheet."""
     with open(compose_path, "r", encoding="utf-8") as fh:
         compose = yaml.safe_load(fh)
-    return generate_factsheet(compose, overrides=overrides, data_dir=data_dir)
+    return generate_factsheet(compose, overrides=overrides, data_dir=data_dir, dockerfiles=dockerfiles)
 
 
 # ---------------------------------------------------------------------------

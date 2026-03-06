@@ -1,0 +1,70 @@
+tags:
+  - Factsheet
+summary: Generate a security risk factsheet
+description: |
+  Processes an uploaded Docker Compose file through the full CSRO pipeline:
+  trait extraction → assumption evaluation → context matching → attack action assignment.
+
+  **Overrides format** (`overrides` field — JSON string):
+  ```json
+  {
+    "NET-1": "Satisfied",
+    "IMG": "Dissatisfied",
+    "csro:AUTH_3": "Unknown"
+  }
+  ```
+  Accepted keys: bare code (`NET-2`), underscored (`NET_2`), full IRI (`csro:NET_2`),
+  category wildcard (`NET`).  Valid states: `Satisfied`, `Dissatisfied`, `Unknown`
+  (case-insensitive).
+
+  Optionally provide Dockerfiles for each service to include static analysis traits
+  from Hadolint (if available). Supply them as `dockerfile_0`, `dockerfile_1`, …
+  in positional order matching the Compose `services` map.
+operationId: generateFactsheet
+consumes:
+  - multipart/form-data
+parameters:
+  - in: formData
+    name: compose_file
+    type: file
+    required: true
+    description: The docker-compose.yml file to analyse.
+  - in: formData
+    name: overrides
+    type: string
+    required: false
+    description: JSON string of assumption-state overrides.
+    example: '{"NET-1": "Satisfied"}'
+  - in: formData
+    name: dockerfile_0
+    type: file
+    required: false
+    description: Dockerfile for the first service (positional order).
+  - in: formData
+    name: dockerfile_1
+    type: file
+    required: false
+    description: Dockerfile for the second service (positional order).
+responses:
+  200:
+    description: |
+      Per-service factsheet keyed by service name.  Each value is a JSON-LD
+      object following the CSRO ontology.
+    schema:
+      type: object
+      additionalProperties:
+        type: object
+  400:
+    description: Missing or invalid input.
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+  500:
+    description: Factsheet generation failed.
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
