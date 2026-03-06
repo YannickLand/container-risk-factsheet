@@ -29,7 +29,7 @@ def _form_request(overrides_value: str):
         content_type="multipart/form-data",
     ):
         from flask import request as flask_req
-        return flask_req._get_current_object()
+        return flask_req._get_current_object()  # pyright: ignore[reportAttributeAccessIssue]
 
 
 def _file_request(content: bytes, filename: str = "overrides.conf"):
@@ -49,7 +49,7 @@ def _file_request(content: bytes, filename: str = "overrides.conf"):
         content_type="multipart/form-data",
     ):
         from flask import request as flask_req
-        return flask_req._get_current_object()
+        return flask_req._get_current_object()  # pyright: ignore[reportAttributeAccessIssue]
 
 
 def _empty_request():
@@ -59,7 +59,7 @@ def _empty_request():
     app = Flask(__name__)
     with app.test_request_context("/", method="POST", data={}, content_type="multipart/form-data"):
         from flask import request as flask_req
-        return flask_req._get_current_object()
+        return flask_req._get_current_object()  # pyright: ignore[reportAttributeAccessIssue]
 
 
 # ---------------------------------------------------------------------------
