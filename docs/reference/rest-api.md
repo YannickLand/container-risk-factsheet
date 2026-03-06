@@ -43,7 +43,7 @@ Generate a security risk factsheet from an uploaded Docker Compose file.
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `compose_file` | file | Yes | `docker-compose.yml` |
-| `overrides` | string | No | JSON string of assumption-state overrides |
+| `overrides` | string or file | No | Assumption-state overrides. Accepts an **inline JSON string** (`{"NET":"Satisfied"}`) or an **uploaded `.conf` file** (`-F "overrides=@assumptions.conf"`) with `KEY=Value` lines |
 | `dockerfile_0` | file | No | Dockerfile for the first service |
 | `dockerfile_1` | file | No | Dockerfile for the second service |
 | `dockerfile_N` | file | No | Dockerfile for the Nth service (positional) |
@@ -54,12 +54,20 @@ Generate a security risk factsheet from an uploaded Docker Compose file.
 
 **Response 500:** `{"error": "<reason>"}` — pipeline failure
 
-**Example:**
+**Example — inline JSON overrides:**
 ```bash
 curl -X POST http://localhost:5004/api/v1/generate-factsheet \
-  -F "compose_file=@docker-compose.yml" \
-  -F 'overrides={"NET-1":"Satisfied"}' \
-  -F "dockerfile_0=@Dockerfile"
+  -F "compose_file=@example/docker-compose.yml" \
+  -F "dockerfile_0=@example/analyzer.dockerfile" \
+  -F 'overrides={"NET":"Satisfied","IMG":"Satisfied"}'
+```
+
+**Example — `.conf` file overrides (PowerShell and Linux/macOS):**
+```bash
+curl -X POST http://localhost:5004/api/v1/generate-factsheet \
+  -F "compose_file=@example/docker-compose.yml" \
+  -F "dockerfile_0=@example/analyzer.dockerfile" \
+  -F "overrides=@example/assumptions.conf"
 ```
 
 ---
@@ -120,10 +128,20 @@ Run the full factsheet pipeline and return a prioritised risk treatment report g
 }
 ```
 
-**Example:**
+**Example — inline JSON overrides:**
 ```bash
 curl -X POST http://localhost:5004/api/v1/generate-treatment-report \
-  -F "compose_file=@docker-compose.yml"
+  -F "compose_file=@example/docker-compose.yml" \
+  -F "dockerfile_0=@example/analyzer.dockerfile" \
+  -F 'overrides={"NET":"Satisfied","IMG":"Satisfied"}'
+```
+
+**Example — `.conf` file overrides:**
+```bash
+curl -X POST http://localhost:5004/api/v1/generate-treatment-report \
+  -F "compose_file=@example/docker-compose.yml" \
+  -F "dockerfile_0=@example/analyzer.dockerfile" \
+  -F "overrides=@example/assumptions.conf"
 ```
 
 ---

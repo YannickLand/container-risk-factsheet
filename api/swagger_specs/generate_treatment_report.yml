@@ -23,7 +23,11 @@ parameters:
     name: overrides
     type: string
     required: false
-    description: JSON string of assumption-state overrides.
+    description: |
+      Assumption-state overrides — two formats accepted:
+      - **Inline JSON string**: `{"NET-1": "Satisfied", "IMG": "Satisfied"}`
+      - **Uploaded .conf file** (use `@filename` with curl): `KEY=Value` lines,
+        `#` comments and blank lines ignored.
     example: '{"NET-1": "Satisfied"}'
   - in: formData
     name: dockerfile_0

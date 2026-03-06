@@ -101,14 +101,24 @@ factsheet generate-factsheet example/docker-compose.yml \
 
 ## REST API
 
-Pass the `overrides` field as a JSON string in the multipart form.  The REST API
-does not support `.conf` files directly — convert to JSON first:
+Pass the `overrides` field in the multipart form.  Two formats are accepted:
 
+**Inline JSON string:**
 ```bash
 curl -X POST http://localhost:5004/api/v1/generate-factsheet \
   -F "compose_file=@example/docker-compose.yml" \
   -F 'overrides={"IMG":"Satisfied","RTS":"Satisfied","NET":"Satisfied"}'
 ```
+
+**`.conf` file upload** (avoids shell-quoting issues on Windows/PowerShell):
+```bash
+curl -X POST http://localhost:5004/api/v1/generate-factsheet \
+  -F "compose_file=@example/docker-compose.yml" \
+  -F "overrides=@example/assumptions.conf"
+```
+
+The server auto-detects the format: if the content starts with `{` it is parsed as
+JSON, otherwise each `KEY=Value` line is read as a conf entry.
 
 ---
 

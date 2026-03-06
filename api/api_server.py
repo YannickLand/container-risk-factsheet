@@ -23,7 +23,7 @@ from api.factsheet_service import (
     generate_treatment_report_from_upload,
 )
 from api.logger import log_factsheet_generation, log_request_info, setup_logger
-from api.utils import pretty_json_response
+from api.utils import parse_overrides, pretty_json_response
 from api.versioning import API_VERSION, get_version_info
 
 logger = setup_logger("api")
@@ -82,17 +82,10 @@ def generate_factsheet_endpoint():
     if not content:
         return pretty_json_response({"error": "Uploaded file is empty."}, 400)
 
-    # Optional overrides
-    overrides: dict = {}
-    overrides_raw = request.form.get("overrides")
-    if overrides_raw:
-        import json as _json
-        try:
-            overrides = _json.loads(overrides_raw)
-        except Exception:
-            return pretty_json_response(
-                {"error": "Invalid JSON in 'overrides' field."}, 400
-            )
+    # Optional overrides (JSON string or uploaded .conf/.json/.yaml file)
+    overrides, ov_err = parse_overrides(request)
+    if ov_err:
+        return pretty_json_response({"error": ov_err}, 400)
 
     # Optional Dockerfiles (dockerfile_0, dockerfile_1, ...)
     dockerfiles: list[str] = []
@@ -190,16 +183,9 @@ def generate_treatment_report_endpoint():
     if not content:
         return pretty_json_response({"error": "Uploaded file is empty."}, 400)
 
-    overrides: dict = {}
-    overrides_raw = request.form.get("overrides")
-    if overrides_raw:
-        import json as _json
-        try:
-            overrides = _json.loads(overrides_raw)
-        except Exception:
-            return pretty_json_response(
-                {"error": "Invalid JSON in 'overrides' field."}, 400
-            )
+    overrides, ov_err = parse_overrides(request)
+    if ov_err:
+        return pretty_json_response({"error": ov_err}, 400)
 
     dockerfiles: list[str] = []
     i = 0
