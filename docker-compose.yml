@@ -18,6 +18,7 @@ services:
     restart: unless-stopped
     networks:
       - factsheet-internal
+      - factsheet-external   # required for host port binding; backend stays internal-only
     # --- Runtime hardening ---
     cap_drop:
       - ALL
@@ -55,4 +56,5 @@ services:
 
 networks:
   factsheet-internal:
-    internal: true
+    internal: true    # backend<->api, never reachable from outside the host
+  factsheet-external: {}  # api<->host; allows the published port 5004 to be bound
