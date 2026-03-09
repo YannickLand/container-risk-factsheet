@@ -1,6 +1,9 @@
 # Container Risk Factsheet
 
 [![CI](https://github.com/YannickLand/container-risk-factsheet/actions/workflows/ci.yml/badge.svg)](https://github.com/YannickLand/container-risk-factsheet/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/YannickLand/container-risk-factsheet/branch/main/graph/badge.svg)](https://codecov.io/gh/YannickLand/container-risk-factsheet)
+[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
+[![DOI](https://zenodo.org/badge/1167599987.svg)](https://zenodo.org/badge/latestdoi/1167599987)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A Python tool and REST API for generating **Container Security Risk Factsheets** from Docker Compose files.  It analyses a deployment's security posture by extracting deployment traits, evaluating security assumptions, matching a context scenario, and identifying possible attack actions — all grounded in the [CSRO ontology](https://w3id.org/csro).
