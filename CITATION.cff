@@ -11,11 +11,12 @@ abstract: >
 authors:
   - family-names: Landeck
     given-names: Yannick
-    orcid: ""
+    orcid: "https://orcid.org/0009-0008-0340-3602"
     github: YannickLand
 version: "1.0.0"
 date-released: "2026-03-09"
 license: MIT
+doi: "10.5281/zenodo.18925002"
 repository-code: "https://github.com/YannickLand/container-risk-factsheet"
 keywords:
   - container security
