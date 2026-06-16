@@ -71,6 +71,18 @@ docker compose up
 | **Reference** | [CLI commands](docs/reference/cli.md) |
 | **Reference** | [REST API endpoints](docs/reference/rest-api.md) |
 | **Explanation** | [How factsheet generation works](docs/explanation/how-factsheets-work.md) |
+| **Experiment** | [Delta Experiment — deterministic, selective risk re-identification](experiment/README.md) |
+
+---
+
+## Delta Experiment
+
+The [`experiment/`](experiment/) folder contains a reproducible demonstration that the tool
+re-derives factsheets **deterministically, selectively, and responsively** when a deployment or
+the knowledge base changes. Starting from one running-example container, single-variable "deltas"
+(hardening / degradation / knowledge-base edits) move the assessed risk in both directions, and
+the bundle records exactly what changed. Start at [`experiment/README.md`](experiment/README.md)
+or jump to the results in [`experiment/results/REPORT.md`](experiment/results/REPORT.md).
 
 ---
 

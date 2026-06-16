@@ -1,0 +1,36 @@
+{
+  "actions_added": [],
+  "actions_removed": [
+    "ContainerDataFromLocalSystem"
+  ],
+  "assumption_counts": {
+    "after": {
+      "Dissatisfied": 1,
+      "Satisfied": 1,
+      "Unknown": 43
+    },
+    "before": {
+      "Dissatisfied": 1,
+      "Satisfied": 1,
+      "Unknown": 43
+    }
+  },
+  "assumption_state_changes": [],
+  "canon_hash_after": "e71dec7e55ea7c80faf0633677e2d8cf9f275ecfadcb753954761d4e243b6e9e",
+  "canon_hash_before": "116313bd3f497cf5f3a157c597d096b8dc14d9cfeeb059ef3782c822b2d49486",
+  "delta_id": "REMOVE_VOLUME",
+  "impact_changes": [],
+  "notes": "Remove the host volume. privileged_host_volume trait gone -> ContainerDataFromLocalSystem risk removed entirely; the other three risks and all levels unchanged (selective removal of one risk).",
+  "rating_changes": [],
+  "reference_baseline": "B0",
+  "scenario": {
+    "after": "Hybrid Cloud Scenario",
+    "before": "Hybrid Cloud Scenario"
+  },
+  "scenario_changed": false,
+  "unchanged_actions": [
+    "ContainerExploitPublicFacingApp",
+    "ContainerPtraceInjection",
+    "ContainerPtraceProcessDiscovery"
+  ]
+}

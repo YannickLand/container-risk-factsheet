@@ -1,0 +1,25 @@
+step,label,scenario,n_unknown,technique,likelihood,risk_level
+DEGRADE_BREACH,assume-breach (all Dissatisfied),High Risk Scenario,0,ContainerPtraceInjection,VeryLikely,Major
+DEGRADE_BREACH,assume-breach (all Dissatisfied),High Risk Scenario,0,ContainerDataFromLocalSystem,VeryLikely,Significant
+DEGRADE_BREACH,assume-breach (all Dissatisfied),High Risk Scenario,0,ContainerExploitPublicFacingApp,VeryLikely,Major
+DEGRADE_BREACH,assume-breach (all Dissatisfied),High Risk Scenario,0,ContainerPtraceProcessDiscovery,Possible,Moderate
+DEGRADE_TECH,technical controls absent,Rapid Prototype Scenario,17,ContainerPtraceInjection,VeryLikely,Major
+DEGRADE_TECH,technical controls absent,Rapid Prototype Scenario,17,ContainerDataFromLocalSystem,VeryLikely,Significant
+DEGRADE_TECH,technical controls absent,Rapid Prototype Scenario,17,ContainerExploitPublicFacingApp,VeryLikely,Major
+DEGRADE_TECH,technical controls absent,Rapid Prototype Scenario,17,ContainerPtraceProcessDiscovery,Possible,Moderate
+B0,"baseline (loose, no assumptions)",Hybrid Cloud Scenario,43,ContainerPtraceInjection,Possible,Significant
+B0,"baseline (loose, no assumptions)",Hybrid Cloud Scenario,43,ContainerDataFromLocalSystem,Possible,Moderate
+B0,"baseline (loose, no assumptions)",Hybrid Cloud Scenario,43,ContainerExploitPublicFacingApp,Unlikely,Moderate
+B0,"baseline (loose, no assumptions)",Hybrid Cloud Scenario,43,ContainerPtraceProcessDiscovery,Unlikely,Moderate
+HARDEN_ARTEFACT,+ non-root + cap_drop,Hybrid Cloud Scenario,41,ContainerPtraceInjection,Possible,Significant
+HARDEN_ARTEFACT,+ non-root + cap_drop,Hybrid Cloud Scenario,41,ContainerDataFromLocalSystem,Possible,Moderate
+HARDEN_ARTEFACT,+ non-root + cap_drop,Hybrid Cloud Scenario,41,ContainerExploitPublicFacingApp,Unlikely,Moderate
+HARDEN_ARTEFACT,+ non-root + cap_drop,Hybrid Cloud Scenario,41,ContainerPtraceProcessDiscovery,Unlikely,Moderate
+HARDEN_TECH,technical controls verified,Balanced Container Security Scenario,17,ContainerPtraceInjection,VeryUnlikely,Moderate
+HARDEN_TECH,technical controls verified,Balanced Container Security Scenario,17,ContainerDataFromLocalSystem,VeryUnlikely,Minor
+HARDEN_TECH,technical controls verified,Balanced Container Security Scenario,17,ContainerExploitPublicFacingApp,VeryUnlikely,Minor
+HARDEN_TECH,technical controls verified,Balanced Container Security Scenario,17,ContainerPtraceProcessDiscovery,VeryUnlikely,Minor
+HARDEN_FULL,all controls verified,Production Scenario,0,ContainerPtraceInjection,VeryUnlikely,Moderate
+HARDEN_FULL,all controls verified,Production Scenario,0,ContainerDataFromLocalSystem,VeryUnlikely,Minor
+HARDEN_FULL,all controls verified,Production Scenario,0,ContainerExploitPublicFacingApp,VeryUnlikely,Minor
+HARDEN_FULL,all controls verified,Production Scenario,0,ContainerPtraceProcessDiscovery,VeryUnlikely,Minor

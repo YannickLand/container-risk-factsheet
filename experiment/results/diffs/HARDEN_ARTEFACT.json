@@ -1,0 +1,50 @@
+{
+  "actions_added": [],
+  "actions_removed": [],
+  "assumption_counts": {
+    "after": {
+      "Dissatisfied": 1,
+      "Satisfied": 3,
+      "Unknown": 41
+    },
+    "before": {
+      "Dissatisfied": 1,
+      "Satisfied": 1,
+      "Unknown": 43
+    }
+  },
+  "assumption_state_changes": [
+    {
+      "assumption": "RTS_1",
+      "state": [
+        "Unknown",
+        "Satisfied"
+      ]
+    },
+    {
+      "assumption": "RTS_3",
+      "state": [
+        "Unknown",
+        "Satisfied"
+      ]
+    }
+  ],
+  "canon_hash_after": "9ddf6bba9d23858508380c57076ec7f53ebb4f06400bc952109ee5af2ce66739",
+  "canon_hash_before": "116313bd3f497cf5f3a157c597d096b8dc14d9cfeeb059ef3782c822b2d49486",
+  "delta_id": "HARDEN_ARTEFACT",
+  "impact_changes": [],
+  "notes": "Bundled technical hardening (run as non-root + drop all capabilities). RTS-1 and RTS-3 flip Unknown->Satisfied; scenario stays Hybrid Cloud and risk levels are unchanged — the measures are recorded in the factsheet's assumption states, but two artefact-level assumptions do not re-select the scenario.",
+  "rating_changes": [],
+  "reference_baseline": "B0",
+  "scenario": {
+    "after": "Hybrid Cloud Scenario",
+    "before": "Hybrid Cloud Scenario"
+  },
+  "scenario_changed": false,
+  "unchanged_actions": [
+    "ContainerDataFromLocalSystem",
+    "ContainerExploitPublicFacingApp",
+    "ContainerPtraceInjection",
+    "ContainerPtraceProcessDiscovery"
+  ]
+}
