@@ -1,0 +1,289 @@
+{
+  "actions_added": [],
+  "actions_removed": [],
+  "assumption_counts": {
+    "after": {
+      "Dissatisfied": 28,
+      "Satisfied": 0,
+      "Unknown": 17
+    },
+    "before": {
+      "Dissatisfied": 1,
+      "Satisfied": 1,
+      "Unknown": 43
+    }
+  },
+  "assumption_state_changes": [
+    {
+      "assumption": "AUTH_1",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "AUTH_2",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "AUTH_3",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "IMG_1",
+      "state": [
+        "Satisfied",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "IMG_2",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "IMG_3",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "IMG_4",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "IMG_5",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "IMG_6",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "MON_1",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "MON_2",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "MON_3",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "MON_4",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "MON_5",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "MON_6",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "MON_7",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "MON_8",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "NET_2",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "NET_3",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "NET_4",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "RTS_1",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "RTS_2",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "RTS_3",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "RTS_4",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "RTS_5",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "RTS_6",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "RTS_7",
+      "state": [
+        "Unknown",
+        "Dissatisfied"
+      ]
+    }
+  ],
+  "canon_hash_after": "6fc1ba86267b5a6d4525537685deb51a5538c5be9886b91ff078e2934ff290da",
+  "canon_hash_before": "116313bd3f497cf5f3a157c597d096b8dc14d9cfeeb059ef3782c822b2d49486",
+  "delta_id": "DEGRADE_TECH",
+  "impact_changes": [],
+  "notes": "The inverse of HARDEN_TECH: the technical control families are verified ABSENT. Scenario re-selects Hybrid Cloud -> Rapid Prototype and every risk level rises (likelihood Possible -> VeryLikely).",
+  "rating_changes": [
+    {
+      "exploitability": [
+        "MediumExploitability",
+        "HighExploitability"
+      ],
+      "exposure": [
+        "MediumExposure",
+        "HighExposure"
+      ],
+      "likelihood": [
+        "Possible",
+        "VeryLikely"
+      ],
+      "risk_level": [
+        "Significant",
+        "Major"
+      ],
+      "technique": "ContainerPtraceInjection"
+    },
+    {
+      "exploitability": [
+        "MediumExploitability",
+        "HighExploitability"
+      ],
+      "exposure": [
+        "MediumExposure",
+        "HighExposure"
+      ],
+      "likelihood": [
+        "Possible",
+        "VeryLikely"
+      ],
+      "risk_level": [
+        "Moderate",
+        "Significant"
+      ],
+      "technique": "ContainerDataFromLocalSystem"
+    },
+    {
+      "exploitability": [
+        "LowExploitability",
+        "HighExploitability"
+      ],
+      "exposure": [
+        "MediumExposure",
+        "HighExposure"
+      ],
+      "likelihood": [
+        "Unlikely",
+        "VeryLikely"
+      ],
+      "risk_level": [
+        "Moderate",
+        "Major"
+      ],
+      "technique": "ContainerExploitPublicFacingApp"
+    },
+    {
+      "exposure": [
+        "MediumExposure",
+        "HighExposure"
+      ],
+      "likelihood": [
+        "Unlikely",
+        "Possible"
+      ],
+      "technique": "ContainerPtraceProcessDiscovery"
+    }
+  ],
+  "reference_baseline": "B0",
+  "scenario": {
+    "after": "Rapid Prototype Scenario",
+    "before": "Hybrid Cloud Scenario"
+  },
+  "scenario_changed": true,
+  "unchanged_actions": []
+}

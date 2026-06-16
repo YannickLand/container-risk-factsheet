@@ -1,0 +1,208 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Factsheet Extraction Schema",
+  "description": "Defines which fields to extract from the risk model ontology for factsheet generation. Controls depth and nesting to prevent duplication while preserving important structural information.",
+  "version": "1.0.0",
+  
+  "extractionRules": {
+    "ContainerSecurityAssumptionStates": {
+      "description": "Defines extraction for container security assumptions section",
+      "topLevelFields": [
+        "AssumptionID",
+        "AssumptionDescription",
+        "AssumptionCategory",
+        "CalculatedSatisfactionState",
+        "RequiredTraits"
+      ],
+      "nestedFields": {
+        "AssumptionDetails": {
+          "extractionMode": "minimal",
+          "fields": ["@id", "@type", "csro:assumptionId", "csro:description"],
+          "nested": {
+            "csro:belongsToCategory": {
+              "extractionMode": "minimal",
+              "fields": ["@id", "@type", "csro:description", "rdfs:label"]
+            },
+            "csro:originatesFrom": {
+              "extractionMode": "minimal",
+              "fields": ["@id", "@type", "csro:sectionId"],
+              "nested": {
+                "csro:belongsToStandard": {
+                  "extractionMode": "minimal",
+                  "fields": ["@id", "@type", "csro:description", "rdfs:label"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "MatchingContextScenario": {
+      "description": "Defines extraction for the matching scenario section",
+      "topLevelFields": [
+        "ScenarioLabel",
+        "ScenarioDescription"
+      ],
+      "nestedFields": {
+        "csro:includesComponent": {
+          "extractionMode": "minimal",
+          "description": "Components included in the scenario",
+          "fields": ["@id", "@type", "csro:description", "rdfs:label"]
+        },
+        "csro:includesAssumption": {
+          "extractionMode": "minimal",
+          "description": "Assumptions in scenario with minimal info - only forAssumption and hasSatisfactionState",
+          "fields": ["@id", "@type"],
+          "nested": {
+            "csro:forAssumption": {
+              "extractionMode": "minimal",
+              "fields": ["@id", "@type", "csro:assumptionId"]
+            },
+            "csro:hasSatisfactionState": {
+              "extractionMode": "minimal",
+              "fields": ["@id", "@type"]
+            }
+          }
+        }
+      }
+    },
+    
+    "PossibleAttackActions": {
+      "description": "Defines extraction for attack actions with full impact->risk->treatment chain",
+      "topLevelFields": [
+        "@id",
+        "@type",
+        "csro:description"
+      ],
+      "nestedFields": {
+        "csro:affects": {
+          "extractionMode": "minimal",
+          "description": "Affected components - keep minimal",
+          "fields": ["@id", "@type", "csro:description", "rdfs:label"]
+        },
+        
+        "csro:appliesTechnique": {
+          "extractionMode": "minimal",
+          "description": "Attack technique reference - keep minimal",
+          "fields": ["@id", "@type", "csro:description", "rdfs:label"],
+          "nested": {
+            "csro:requiresTrait": {
+              "extractionMode": "minimal",
+              "fields": ["@id", "@type", "csro:description"]
+            },
+            "csro:referencesAttackTechnique": {
+              "extractionMode": "minimal",
+              "fields": ["@id", "@type", "d3f:attack-id", "d3f:definition", "rdfs:label"]
+            }
+          }
+        },
+        
+        "csro:causesImpact": {
+          "extractionMode": "full",
+          "description": "IMPORTANT: Extract full impact chain including nested risk and treatments",
+          "fields": ["@id", "@type", "csro:description", "rdfs:label"],
+          "nested": {
+            "csro:hasImpactRating": {
+              "extractionMode": "minimal",
+              "fields": ["@id", "@type", "csro:description"]
+            },
+            
+            "csro:indicates": {
+              "extractionMode": "full",
+              "description": "Risk object - extract fully including treatments",
+              "fields": ["@id", "@type", "csro:description"],
+              "nested": {
+                "csro:hasRiskLevel": {
+                  "extractionMode": "minimal",
+                  "fields": ["@id", "@type", "rdfs:label"]
+                },
+                
+                "csro:isTreatedBy": {
+                  "extractionMode": "full",
+                  "description": "CRITICAL: Extract full treatment details including addressed assumptions",
+                  "fields": [
+                    "@id",
+                    "@type",
+                    "csro:description",
+                    "rdfs:label"
+                  ],
+                  "nested": {
+                    "csro:addresses": {
+                      "extractionMode": "reference",
+                      "description": "Assumption addressed by treatment - minimal info only (ID and type), details are in ContainerSecurityAssumptionStates",
+                      "fields": ["@id", "@type", "csro:assumptionId"]
+                    },
+                    "csro:hasGuideline": {
+                      "extractionMode": "minimal",
+                      "fields": ["@id", "@type", "csro:description", "csro:referenceUrl", "rdfs:label"]
+                    },
+                    "csro:isImplementedBy": {
+                      "extractionMode": "minimal",
+                      "fields": ["@id", "@type", "csro:description"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        
+        "csro:hasExploitabilityRating": {
+          "extractionMode": "minimal",
+          "fields": ["@id", "@type", "csro:description"]
+        },
+        
+        "csro:hasExposureRating": {
+          "extractionMode": "minimal",
+          "fields": ["@id", "@type", "csro:description"]
+        },
+        
+        "csro:hasLikelihood": {
+          "extractionMode": "minimal",
+          "fields": ["@id", "@type", "rdfs:label"]
+        },
+        
+        "csro:inContext": {
+          "extractionMode": "minimal",
+          "description": "Context scenario - keep minimal since it's already in MatchingContextScenario",
+          "fields": ["@id", "@type", "csro:description"]
+        }
+      }
+    }
+  },
+  
+  "extractionModes": {
+    "minimal": {
+      "description": "Extract only specified fields, no recursion beyond defined nested objects"
+    },
+    "full": {
+      "description": "Extract specified fields and all defined nested objects recursively"
+    },
+    "reference": {
+      "description": "Extract fields needed for cross-referencing and filtering (e.g., assumption IDs)"
+    }
+  },
+  
+  "filteringRules": {
+    "PossibleAttackActions": {
+      "csro:isTreatedBy": {
+        "filterBy": "csro:addresses",
+        "filterCondition": "exclude_if_satisfied",
+        "description": "Filter out treatments that address assumptions already marked as 'Satisfied' in ContainerSecurityAssumptionStates"
+      }
+    }
+  },
+  
+  "notes": {
+    "purpose": "This schema defines the exact structure of the generated factsheet",
+    "benefits": [
+      "Prevents excessive duplication by controlling extraction depth",
+      "Preserves critical nested information (impact->risk->treatments chain)",
+      "Enables filtering of irrelevant treatments based on satisfied assumptions",
+      "Provides clear documentation of factsheet structure",
+      "Allows easy modifications without code changes"
+    ],
+    "usage": "The factsheet generation code reads this schema and extracts only the specified fields at each nesting level"
+  }
+}

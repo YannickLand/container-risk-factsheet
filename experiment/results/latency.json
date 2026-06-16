@@ -1,0 +1,15 @@
+{
+  "pure_analysis_ms": {
+    "mean": 104.4,
+    "min": 100.5,
+    "max": 108.0,
+    "stdev": 2.2,
+    "n": 20,
+    "note": "warm, in-process, B0 (no overrides); includes hadolint subprocess + ~14ms KB load per call"
+  },
+  "kb_load_ms_once": 14.4,
+  "docker_run_wall_seconds_mean": 2.0,
+  "docker_run_wall_seconds_n": 8,
+  "container_start_overhead_seconds_est": 1.9,
+  "manual_baseline": "no measured duration; interview-grounded estimate of >=1 expert workshop (~3-4h), often several iterations. Order-of-magnitude contrast: seconds (tool) vs hours (manual). Labelled estimate, not a controlled measurement."
+}

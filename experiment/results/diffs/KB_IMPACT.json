@@ -1,0 +1,50 @@
+{
+  "actions_added": [],
+  "actions_removed": [],
+  "assumption_counts": {
+    "after": {
+      "Dissatisfied": 1,
+      "Satisfied": 1,
+      "Unknown": 43
+    },
+    "before": {
+      "Dissatisfied": 1,
+      "Satisfied": 1,
+      "Unknown": 43
+    }
+  },
+  "assumption_state_changes": [],
+  "canon_hash_after": "31cec6166f9952ff0bd6800743c2ba973b9a24b8565290b65282a0d56c9bbe3b",
+  "canon_hash_before": "116313bd3f497cf5f3a157c597d096b8dc14d9cfeeb059ef3782c822b2d49486",
+  "delta_id": "KB_IMPACT",
+  "impact_changes": [
+    {
+      "impact_rating": [
+        "Moderate",
+        "Critical"
+      ],
+      "technique": "ContainerDataFromLocalSystem"
+    }
+  ],
+  "notes": "Knowledge-level edit on the baseline (Hybrid Cloud) impact node. The host-files-exposed impact and risk level rise; the only delta that moves impact, and it propagates selectively to that one risk.",
+  "rating_changes": [
+    {
+      "risk_level": [
+        "Moderate",
+        "Critical"
+      ],
+      "technique": "ContainerDataFromLocalSystem"
+    }
+  ],
+  "reference_baseline": "B0",
+  "scenario": {
+    "after": "Hybrid Cloud Scenario",
+    "before": "Hybrid Cloud Scenario"
+  },
+  "scenario_changed": false,
+  "unchanged_actions": [
+    "ContainerExploitPublicFacingApp",
+    "ContainerPtraceInjection",
+    "ContainerPtraceProcessDiscovery"
+  ]
+}

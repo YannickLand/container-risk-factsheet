@@ -1,0 +1,3 @@
+# Transient working outputs — regenerate with run_all.sh / determinism.sh.
+# The committed, self-contained deliverable is experiment/results/ (which includes results/runs/).
+runs/
