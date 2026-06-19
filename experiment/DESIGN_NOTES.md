@@ -27,16 +27,16 @@ flip is recorded but usually does not re-select the scenario.
 ## Storyline (bidirectional hardening)
 Baseline **B0** = loosely-configured running-example container, **no assumptions** → matches
 **Hybrid Cloud** (43/45 Unknown; likelihood *Possible*). From there:
-- **Hardening (verify controls present):** `HARDEN_ARTEFACT` (non-root + cap_drop, artefact) →
-  recorded but no scenario/level change; `HARDEN_TECH` (IMG/RTS/NET/AUTH/MON Satisfied) → Balanced,
-  likelihood Possible→VeryUnlikely; `HARDEN_FULL` (all Satisfied) → Production, 0 Unknown.
-- **Degradation (verify controls absent):** `DEGRADE_TECH` (same five families Dissatisfied) →
-  Rapid Prototype, Possible→VeryLikely; `DEGRADE_BREACH` (all Dissatisfied) → High Risk, VeryLikely.
-- **Structural / knowledge:** `REMOVE_VOLUME` (drop `/var` mount) → ContainerDataFromLocalSystem
-  risk removed (selective); `KB_IMPACT` (edit the Hybrid Cloud HostSystemFilesExposed node
+- **Hardening (verify controls present):** `D1` (non-root + cap_drop, artefact) →
+  recorded but no scenario/level change; `D2` (IMG/RTS/NET/AUTH/MON Satisfied) → Balanced,
+  likelihood Possible→VeryUnlikely; `D3` (all Satisfied) → Production, 0 Unknown.
+- **Degradation (verify controls absent):** `D4` (same five families Dissatisfied) →
+  Rapid Prototype, Possible→VeryLikely; `D5` (all Dissatisfied) → High Risk, VeryLikely.
+- **Structural / knowledge:** `D6` (drop `/var` mount) → ContainerDataFromLocalSystem
+  risk removed (selective); `D7` (edit the Hybrid Cloud HostSystemFilesExposed node
   Moderate→Critical) → the only impact mover.
 
-`DEGRADE_TECH` is the exact inverse of `HARDEN_TECH` (same five families, Dissatisfied vs
+`D4` is the exact inverse of `D2` (same five families, Dissatisfied vs
 Satisfied) — a clean symmetric demonstration of bidirectional re-rating.
 
 ## Why the design is shaped this way
@@ -45,9 +45,9 @@ Satisfied) — a clean symmetric demonstration of bidirectional re-rating.
   single delta to move it. Hybrid Cloud (all-Unknown) is the natural starting point and is near
   enough to both Balanced (hardening) and Rapid Prototype/High Risk (degradation) for realistic
   single-variable deltas to tip it. Supplying `assumptions.conf` is therefore a *delta*, not the baseline.
-- **Artefact hardening is bundled** into one `HARDEN_ARTEFACT` step precisely to show that recorded
+- **Artefact hardening is bundled** into one `D1` step precisely to show that recorded
   posture improvements need not change the risk levels until a breadth of assumptions is set.
-- **Self-documenting delta IDs** (HARDEN_*, DEGRADE_*, REMOVE_VOLUME, KB_IMPACT) rather than opaque numbers.
+- **Self-documenting delta IDs** (HARDEN_*, DEGRADE_*, D6, D7) rather than opaque numbers.
 
 ## Notes for interpretation
 - Only ~6 of 45 assumptions are technically verifiable from the artefacts today (NET_1, NET_2,

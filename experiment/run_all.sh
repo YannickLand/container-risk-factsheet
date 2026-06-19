@@ -37,13 +37,13 @@ EOF
 echo "===== Baseline ====="
 run B0              -    -
 echo "===== Hardening: risk DOWN ====="
-run HARDEN_ARTEFACT -    -      # bundled artefact hardening: non-root + cap_drop ALL
-run HARDEN_TECH     yes  -      # technical assumptions verified Satisfied -> Balanced
-run HARDEN_FULL     yes  -      # all families Satisfied -> Production
+run D1 -    -      # bundled artefact hardening: non-root + cap_drop ALL
+run D2     yes  -      # technical assumptions verified Satisfied -> Balanced
+run D3     yes  -      # all families Satisfied -> Production
 echo "===== Degradation: risk UP ====="
-run DEGRADE_TECH    yes  -      # technical controls verified ABSENT -> Rapid Prototype
-run DEGRADE_BREACH  yes  -      # assume-breach (all Dissatisfied) -> High Risk
+run D4    yes  -      # technical controls verified ABSENT -> Rapid Prototype
+run D5  yes  -      # assume-breach (all Dissatisfied) -> High Risk
 echo "===== Structural / knowledge ====="
-run REMOVE_VOLUME   -    -            # remove host volume -> selective risk removal
-run KB_IMPACT       -    kb/d6_data   # raise host-files-exposed impact (HybridCloud node)
+run D6   -    -            # remove host volume -> selective risk removal
+run D7       -    kb/d6_data   # raise host-files-exposed impact (HybridCloud node)
 echo "DONE."

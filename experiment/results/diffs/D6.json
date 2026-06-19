@@ -18,7 +18,7 @@
   "assumption_state_changes": [],
   "canon_hash_after": "e71dec7e55ea7c80faf0633677e2d8cf9f275ecfadcb753954761d4e243b6e9e",
   "canon_hash_before": "116313bd3f497cf5f3a157c597d096b8dc14d9cfeeb059ef3782c822b2d49486",
-  "delta_id": "REMOVE_VOLUME",
+  "delta_id": "D6",
   "impact_changes": [],
   "notes": "Remove the host volume. privileged_host_volume trait gone -> ContainerDataFromLocalSystem risk removed entirely; the other three risks and all levels unchanged (selective removal of one risk).",
   "rating_changes": [],
