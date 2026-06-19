@@ -24,13 +24,13 @@ the posture and lowers risk; verifying them *absent* raises it.
 
 | delta | change | direction |
 |---|---|---|
-| `HARDEN_ARTEFACT` | Compose: run as non-root **and** `cap_drop: ALL` | harden (recorded, no level change) |
-| `HARDEN_TECH` | `assumptions.conf`: technical control families = Satisfied | harden → risk down |
-| `HARDEN_FULL` | `assumptions.conf`: all families = Satisfied | harden → risk down |
-| `DEGRADE_TECH` | `assumptions.conf`: technical control families = Dissatisfied | degrade → risk up |
-| `DEGRADE_BREACH` | `assumptions.conf`: all families = Dissatisfied | degrade → risk up |
-| `REMOVE_VOLUME` | Compose: remove the `/var` host volume | selective risk removal |
-| `KB_IMPACT` | knowledge base: raise one impact rating | knowledge-level change |
+| `D1` | Compose: run as non-root **and** `cap_drop: ALL` | harden (recorded, no level change) |
+| `D2` | `assumptions.conf`: technical control families = Satisfied | harden → risk down |
+| `D3` | `assumptions.conf`: all families = Satisfied | harden → risk down |
+| `D4` | `assumptions.conf`: technical control families = Dissatisfied | degrade → risk up |
+| `D5` | `assumptions.conf`: all families = Dissatisfied | degrade → risk up |
+| `D6` | Compose: remove the `/var` host volume | selective risk removal |
+| `D7` | knowledge base: raise one impact rating | knowledge-level change |
 
 ## Reproduce
 
@@ -58,7 +58,7 @@ experiment/
   analyze.py           summarise / hash / diff a factsheet
   simulate.py          in-process scenario-selection explorer (no Docker)
   inputs/<DELTA>/      exact inputs per run (compose, dockerfile, assumptions.conf)
-  kb/d6_data/          edited knowledge-base copy used by KB_IMPACT
+  kb/d6_data/          edited knowledge-base copy used by D7
   runs/<DELTA>/        raw factsheet.json + meta.json + input copies
   results/             portable bundle — START at results/REPORT.md
 ```

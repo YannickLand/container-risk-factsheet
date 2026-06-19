@@ -5,10 +5,10 @@ rollup.py — Build the portable, self-contained result bundle for the experimen
 Reframed (bidirectional hardening) experiment: baseline B0 = loosely-configured
 running-example container with NO assumptions provided (matches Hybrid Cloud). Deltas
 are single-variable changes vs B0 that either (a) record a technical hardening measure
-without yet changing the scenario/risk-levels (HARDEN_ARTEFACT), (b) change the risk
-SET (REMOVE_VOLUME), (c) change the risk LEVELS by re-selecting the scenario — down
-(HARDEN_TECH, HARDEN_FULL) or up (DEGRADE_TECH, DEGRADE_BREACH), or (d) change impact
-at the knowledge level (KB_IMPACT).
+without yet changing the scenario/risk-levels (D1), (b) change the risk
+SET (D6), (c) change the risk LEVELS by re-selecting the scenario — down
+(D2, D3) or up (D4, D5), or (d) change impact
+at the knowledge level (D7).
 
 Produces, under experiment/results/:
   results_summary.csv, hardening_progression.csv, diffs/<ID>.json, REPORT.md,
@@ -136,31 +136,31 @@ def compact(rc, ic, ac):
 
 # delta_id -> (file_changed, mechanism, direction, note). All compared vs B0.
 DELTAS = {
-    "HARDEN_ARTEFACT": ("docker-compose.yml: + non-root user AND cap_drop ALL", "artefact", "harden",
+    "D1": ("docker-compose.yml: + non-root user AND cap_drop ALL", "artefact", "harden",
         "Bundled technical hardening (run as non-root + drop all capabilities). RTS-1 and RTS-3 flip "
         "Unknown->Satisfied; scenario stays Hybrid Cloud and risk levels are unchanged — the measures are "
         "recorded in the factsheet's assumption states, but two artefact-level assumptions do not re-select the scenario."),
-    "HARDEN_TECH": ("assumptions.conf: IMG/RTS/NET/AUTH/MON = Satisfied", "assumption", "harden",
+    "D2": ("assumptions.conf: IMG/RTS/NET/AUTH/MON = Satisfied", "assumption", "harden",
         "Verify the technical control families. Enough assumptions resolve that the scenario re-selects "
         "Hybrid Cloud -> Balanced and every risk level improves (likelihood Possible -> VeryUnlikely)."),
-    "HARDEN_FULL": ("assumptions.conf: all 9 families = Satisfied", "assumption", "harden",
+    "D3": ("assumptions.conf: all 9 families = Satisfied", "assumption", "harden",
         "Verify governance/process too. Scenario -> Production; all 45 assumptions Satisfied (0 Unknown). Risk "
         "already at the floor — governance refines the context without lowering these technical likelihoods further."),
-    "DEGRADE_TECH": ("assumptions.conf: IMG/RTS/NET/AUTH/MON = Dissatisfied", "assumption", "degrade",
-        "The inverse of HARDEN_TECH: the technical control families are verified ABSENT. Scenario re-selects "
+    "D4": ("assumptions.conf: IMG/RTS/NET/AUTH/MON = Dissatisfied", "assumption", "degrade",
+        "The inverse of D2: the technical control families are verified ABSENT. Scenario re-selects "
         "Hybrid Cloud -> Rapid Prototype and every risk level rises (likelihood Possible -> VeryLikely)."),
-    "DEGRADE_BREACH": ("assumptions.conf: all 9 families = Dissatisfied", "assumption", "degrade",
+    "D5": ("assumptions.conf: all 9 families = Dissatisfied", "assumption", "degrade",
         "Assume-breach: no control family can be relied upon. Scenario -> High Risk; likelihood VeryLikely. "
         "(Same likelihood as Rapid Prototype for these techniques — governance refines the scenario, not the "
         "technical likelihood, mirroring the hardening side.)"),
-    "REMOVE_VOLUME": ("docker-compose.yml: remove - /var:/host-var", "artefact", "harden",
+    "D6": ("docker-compose.yml: remove - /var:/host-var", "artefact", "harden",
         "Remove the host volume. privileged_host_volume trait gone -> ContainerDataFromLocalSystem risk removed "
         "entirely; the other three risks and all levels unchanged (selective removal of one risk)."),
-    "KB_IMPACT": ("risk_export.jsonld copy: HybridCloud HostSystemFilesExposed Moderate->Critical", "kb", "kb",
+    "D7": ("risk_export.jsonld copy: HybridCloud HostSystemFilesExposed Moderate->Critical", "kb", "kb",
         "Knowledge-level edit on the baseline (Hybrid Cloud) impact node. The host-files-exposed impact and risk "
         "level rise; the only delta that moves impact, and it propagates selectively to that one risk."),
 }
-ORDER = ["HARDEN_ARTEFACT", "HARDEN_TECH", "HARDEN_FULL", "DEGRADE_TECH", "DEGRADE_BREACH", "REMOVE_VOLUME", "KB_IMPACT"]
+ORDER = ["D1", "D2", "D3", "D4", "D5", "D6", "D7"]
 
 
 def main():
@@ -208,9 +208,9 @@ def main():
         for r in rows: w.writerow(r)
 
     # hardening_progression.csv — the bidirectional arc
-    prog = [("DEGRADE_BREACH", "assume-breach (all Dissatisfied)"), ("DEGRADE_TECH", "technical controls absent"),
-            ("B0", "baseline (loose, no assumptions)"), ("HARDEN_ARTEFACT", "+ non-root + cap_drop"),
-            ("HARDEN_TECH", "technical controls verified"), ("HARDEN_FULL", "all controls verified")]
+    prog = [("D5", "assume-breach (all Dissatisfied)"), ("D4", "technical controls absent"),
+            ("B0", "baseline (loose, no assumptions)"), ("D1", "+ non-root + cap_drop"),
+            ("D2", "technical controls verified"), ("D3", "all controls verified")]
     with open(os.path.join(RESULTS, "hardening_progression.csv"), "w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
         w.writerow(["step", "label", "scenario", "n_unknown", "technique", "likelihood", "risk_level"])
@@ -282,13 +282,13 @@ def design_rationale_section():
         "edits, and supplying `assumptions.conf` becomes a delta in its own right rather than part of the baseline.", "",
         "**Why bundle the artefact hardening.** Running as non-root and dropping capabilities are two technically-"
         "detectable measures (they flip RTS-1 and RTS-3). Individually or together they are recorded but do not "
-        "re-select the scenario, so they are presented as one `HARDEN_ARTEFACT` step — its purpose is precisely to "
+        "re-select the scenario, so they are presented as one `D1` step — its purpose is precisely to "
         "show that *recorded posture improvements need not change the risk levels until a breadth of assumptions is set*. "
         "(Note: the runs-as-non-root signal comes from the Compose `user:` field, not the Dockerfile `USER` directive.)", "",
-        "**Why the symmetric assumption deltas.** HARDEN_TECH and DEGRADE_TECH set the *same* five technical "
+        "**Why the symmetric assumption deltas.** D2 and D4 set the *same* five technical "
         "control families to Satisfied vs Dissatisfied — an exact inverse that re-selects the scenario in opposite "
         "directions (→ Balanced / → Rapid Prototype), cleanly isolating the effect of verifying controls present "
-        "vs absent. HARDEN_FULL and DEGRADE_BREACH are the end anchors (Production / High Risk).", "",
+        "vs absent. D3 and D5 are the end anchors (Production / High Risk).", "",
     ]
 
 
@@ -345,7 +345,7 @@ def write_report(rows, det, lat):
           f"- **Tool image:** `container-risk-factsheet-api:latest` — digest `{m.get('image_digest','?')}` "
           f"(built from `docker-compose.yml`; bundles **hadolint v2.12.0**).",
           f"- **Tool commit:** `{m.get('tool_commit','?')}`. **KB:** `data/.../15_full_csro/risk_export.jsonld` "
-          "(baked into the image; KB_IMPACT mounts an edited copy via `--data-dir`).",
+          "(baked into the image; D7 mounts an edited copy via `--data-dir`).",
           "- **Invocation:** each run is one *separate* `docker run` of the image's `factsheet` CLI "
           "(`python -m factsheet.cli generate-factsheet ... --no-pretty`). The live API server "
           "(`docker compose up` → `POST /api/v1/generate-factsheet`) uses the identical in-process code path.",
@@ -357,10 +357,10 @@ def write_report(rows, det, lat):
           "attack actions (the scenario's instances whose technique `requiresTrait` are present) → ratings "
           "(exploitability/exposure/likelihood/risk/impact are **static per-scenario values in the KB**).", "",
           "**Three granularities of responsiveness:** (1) artefact/assumption changes that update the "
-          "*posture* (assumption states) — HARDEN_ARTEFACT; (2) trait changes that update the *risk set* via "
-          "`requiresTrait` gates — REMOVE_VOLUME; (3) assumption-profile changes that re-select the scenario and "
-          "so update the *risk levels* — HARDEN_TECH/HARDEN_FULL (down) and DEGRADE_TECH/DEGRADE_BREACH (up). "
-          "Impact moves only at the **knowledge level** — KB_IMPACT. Per-action levels move *only* when the "
+          "*posture* (assumption states) — D1; (2) trait changes that update the *risk set* via "
+          "`requiresTrait` gates — D6; (3) assumption-profile changes that re-select the scenario and "
+          "so update the *risk levels* — D2/D3 (down) and D4/D5 (up). "
+          "Impact moves only at the **knowledge level** — D7. Per-action levels move *only* when the "
           "scenario changes, which is why the single artefact hardening step is recorded but does not yet move likelihood.", ""]
 
     # Baseline definition
@@ -394,12 +394,12 @@ def write_report(rows, det, lat):
           "hardening step does not):", "",
           "| direction | step | change | scenario | #Unknown | " + " | ".join(TSHORT[t] for t in TECHS) + " |",
           "|" + "---|" * (5 + len(TECHS))]
-    prog = [("↑ risk", "DEGRADE_BREACH", "assume-breach (all Dissatisfied)"),
-            ("↑ risk", "DEGRADE_TECH", "technical controls verified absent"),
+    prog = [("↑ risk", "D5", "assume-breach (all Dissatisfied)"),
+            ("↑ risk", "D4", "technical controls verified absent"),
             ("— base", "B0", "baseline (loose, no assumptions)"),
-            ("↓ risk", "HARDEN_ARTEFACT", "+ non-root + cap_drop (artefact)"),
-            ("↓ risk", "HARDEN_TECH", "technical controls verified present"),
-            ("↓ risk", "HARDEN_FULL", "all controls verified present")]
+            ("↓ risk", "D1", "+ non-root + cap_drop (artefact)"),
+            ("↓ risk", "D2", "technical controls verified present"),
+            ("↓ risk", "D3", "all controls verified present")]
     for direction, rid, lbl in prog:
         s = summarise(rid)
         cells = []
@@ -407,21 +407,21 @@ def write_report(rows, det, lat):
             act = s["actions"].get("csro:" + t)
             cells.append(f"{short(act['likelihood'])}/{short(act['risk_level'])}" if act else "—")
         L.append(f"| {direction} | {rid} | {lbl} | {s['scenario']} | {s['counts']['Unknown']} | " + " | ".join(cells) + " |")
-    L += ["", "HARDEN_ARTEFACT leaves every cell unchanged vs B0 (it only flips assumption states RTS-1/RTS-3 — see "
-          "`results_summary.csv` `changes`); HARDEN_TECH improves every level and HARDEN_FULL holds at the floor "
-          "while resolving all Unknowns; DEGRADE_TECH and DEGRADE_BREACH escalate every level. Rapid Prototype and "
+    L += ["", "D1 leaves every cell unchanged vs B0 (it only flips assumption states RTS-1/RTS-3 — see "
+          "`results_summary.csv` `changes`); D2 improves every level and D3 holds at the floor "
+          "while resolving all Unknowns; D4 and D5 escalate every level. Rapid Prototype and "
           "High Risk (and Balanced vs Production) share these technical likelihoods — the factsheet still differs "
           "(scenario label + assumption states), which is itself a result: **governance/process assumptions refine "
           "the matched context, while the technical controls drive these container-escape likelihoods** (true in both directions).", ""]
 
     # Unknown-resolution
-    dt_ = summarise("HARDEN_TECH"); df_ = summarise("HARDEN_FULL")
+    dt_ = summarise("D2"); df_ = summarise("D3")
     n = b0["n_assumptions"]
     L += ["## Unknown-resolution (providing assumptions)", "",
           "| run | scenario | Unknown | %Unknown |", "|---|---|---|---|",
           f"| B0 (no assumptions) | {b0['scenario']} | {b0['counts']['Unknown']} | {round(100*b0['counts']['Unknown']/n)}% |",
-          f"| HARDEN_TECH | {dt_['scenario']} | {dt_['counts']['Unknown']} | {round(100*dt_['counts']['Unknown']/n)}% |",
-          f"| HARDEN_FULL | {df_['scenario']} | {df_['counts']['Unknown']} | {round(100*df_['counts']['Unknown']/n)}% |", "",
+          f"| D2 | {dt_['scenario']} | {dt_['counts']['Unknown']} | {round(100*dt_['counts']['Unknown']/n)}% |",
+          f"| D3 | {df_['scenario']} | {df_['counts']['Unknown']} | {round(100*df_['counts']['Unknown']/n)}% |", "",
           f"→ Providing assumptions resolves Unknown {b0['counts']['Unknown']}→{dt_['counts']['Unknown']}→{df_['counts']['Unknown']} "
           f"({round(100*b0['counts']['Unknown']/n)}% → {round(100*dt_['counts']['Unknown']/n)}% → 0%) and improves the matched "
           "scenario Hybrid Cloud → Balanced → Production. Concrete \"assumptions resolve the ~85% Unknown\" evidence.", ""]
@@ -430,13 +430,13 @@ def write_report(rows, det, lat):
     L += ["## Single-variable deltas — summary", "",
           "| delta | mechanism | scenario change | assumptions changed | actions | risk-level change | effect |",
           "|---|---|---|---|---|---|---|"]
-    eff = {"HARDEN_ARTEFACT": "non-root + cap_drop recorded (RTS-1/RTS-3 Satisfied); levels unchanged",
-           "HARDEN_TECH": "**every level improves** (Possible→VeryUnlikely)",
-           "HARDEN_FULL": "all Unknowns resolved; levels at floor",
-           "DEGRADE_TECH": "**every level escalates** (Possible→VeryLikely)",
-           "DEGRADE_BREACH": "**every level escalates** (→VeryLikely); High Risk scenario",
-           "REMOVE_VOLUME": "host-files risk **removed** (4→3 actions)",
-           "KB_IMPACT": "host-files **impact Moderate→Critical** (knowledge level)"}
+    eff = {"D1": "non-root + cap_drop recorded (RTS-1/RTS-3 Satisfied); levels unchanged",
+           "D2": "**every level improves** (Possible→VeryUnlikely)",
+           "D3": "all Unknowns resolved; levels at floor",
+           "D4": "**every level escalates** (Possible→VeryLikely)",
+           "D5": "**every level escalates** (→VeryLikely); High Risk scenario",
+           "D6": "host-files risk **removed** (4→3 actions)",
+           "D7": "host-files **impact Moderate→Critical** (knowledge level)"}
     rmap = {r["delta_id"]: r for r in rows}
     for did in ORDER:
         r = rmap[did]
@@ -444,11 +444,11 @@ def write_report(rows, det, lat):
         lvl = "yes" if any(x in r["changes"] for x in ("likelihood:", "risk_level:", "impact:")) else "no"
         L.append(f"| {did} | {r['mechanism']} ({r['direction']}) | {sc} | {r['assumptions_changed']} | "
                  f"{r['actions_before_count']}→{r['actions_after_count']} | {lvl} | {eff[did]} |")
-    L += ["", "**Reading.** HARDEN_ARTEFACT confirms that *technical hardening is recorded in the factsheet "
+    L += ["", "**Reading.** D1 confirms that *technical hardening is recorded in the factsheet "
           "(assumption states flip to Satisfied) but a couple of artefact-level assumptions do not re-select the "
           "scenario, so the four risks' likelihood is unchanged* — risk levels move only once a breadth of "
-          "assumptions is set, in either direction (HARDEN_TECH ↓ / DEGRADE_TECH ↑). REMOVE_VOLUME changes the "
-          "risk **set** (selective removal) without touching the scenario. KB_IMPACT is the only impact mover "
+          "assumptions is set, in either direction (D2 ↓ / D4 ↑). D6 changes the "
+          "risk **set** (selective removal) without touching the scenario. D7 is the only impact mover "
           "(knowledge level). Some scenarios share identical ratings (Balanced≡Production, Rapid Prototype≡High "
           "Risk for these techniques) — the factsheet still changes, which is itself a result.", ""]
     L += design_rationale_section()

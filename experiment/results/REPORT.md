@@ -9,7 +9,7 @@ The experiment changes one thing at a time (a *delta*) to a container deployment
 ## Provenance & reproduction
 
 - **Tool image:** `container-risk-factsheet-api:latest` — digest `sha256:a041e5e7479be1d780fd3173de21aa9f65befdf80839706f2c40d2fc72af5896` (built from `docker-compose.yml`; bundles **hadolint v2.12.0**).
-- **Tool commit:** `8b684ee`. **KB:** `data/.../15_full_csro/risk_export.jsonld` (baked into the image; KB_IMPACT mounts an edited copy via `--data-dir`).
+- **Tool commit:** `120dd5d`. **KB:** `data/.../15_full_csro/risk_export.jsonld` (baked into the image; D7 mounts an edited copy via `--data-dir`).
 - **Invocation:** each run is one *separate* `docker run` of the image's `factsheet` CLI (`python -m factsheet.cli generate-factsheet ... --no-pretty`). The live API server (`docker compose up` → `POST /api/v1/generate-factsheet`) uses the identical in-process code path.
 - **Reproduce:** `docker compose build api` then `bash experiment/run_all.sh && bash experiment/determinism.sh && python experiment/rollup.py`.
 
@@ -17,7 +17,7 @@ The experiment changes one thing at a time (a *delta*) to a container deployment
 
 Traits ← Compose (+ Dockerfile via hadolint) → assumption states (trait verifiers, overridable by `assumptions.conf`) → **context scenario** (best score of the assumption profile vs 22 scenarios) → attack actions (the scenario's instances whose technique `requiresTrait` are present) → ratings (exploitability/exposure/likelihood/risk/impact are **static per-scenario values in the KB**).
 
-**Three granularities of responsiveness:** (1) artefact/assumption changes that update the *posture* (assumption states) — HARDEN_ARTEFACT; (2) trait changes that update the *risk set* via `requiresTrait` gates — REMOVE_VOLUME; (3) assumption-profile changes that re-select the scenario and so update the *risk levels* — HARDEN_TECH/HARDEN_FULL (down) and DEGRADE_TECH/DEGRADE_BREACH (up). Impact moves only at the **knowledge level** — KB_IMPACT. Per-action levels move *only* when the scenario changes, which is why the single artefact hardening step is recorded but does not yet move likelihood.
+**Three granularities of responsiveness:** (1) artefact/assumption changes that update the *posture* (assumption states) — D1; (2) trait changes that update the *risk set* via `requiresTrait` gates — D6; (3) assumption-profile changes that re-select the scenario and so update the *risk levels* — D2/D3 (down) and D4/D5 (up). Impact moves only at the **knowledge level** — D7. Per-action levels move *only* when the scenario changes, which is why the single artefact hardening step is recorded but does not yet move likelihood.
 
 ## Baseline definition (B0)
 
@@ -55,13 +55,13 @@ networks:
 
 | delta | edit | mechanism |
 |---|---|---|
-| HARDEN_ARTEFACT | docker-compose.yml: + non-root user AND cap_drop ALL | artefact |
-| HARDEN_TECH | assumptions.conf: IMG/RTS/NET/AUTH/MON = Satisfied | assumption |
-| HARDEN_FULL | assumptions.conf: all 9 families = Satisfied | assumption |
-| DEGRADE_TECH | assumptions.conf: IMG/RTS/NET/AUTH/MON = Dissatisfied | assumption |
-| DEGRADE_BREACH | assumptions.conf: all 9 families = Dissatisfied | assumption |
-| REMOVE_VOLUME | docker-compose.yml: remove - /var:/host-var | artefact |
-| KB_IMPACT | risk_export.jsonld copy: HybridCloud HostSystemFilesExposed Moderate->Critical | kb |
+| D1 | docker-compose.yml: + non-root user AND cap_drop ALL | artefact |
+| D2 | assumptions.conf: IMG/RTS/NET/AUTH/MON = Satisfied | assumption |
+| D3 | assumptions.conf: all 9 families = Satisfied | assumption |
+| D4 | assumptions.conf: IMG/RTS/NET/AUTH/MON = Dissatisfied | assumption |
+| D5 | assumptions.conf: all 9 families = Dissatisfied | assumption |
+| D6 | docker-compose.yml: remove - /var:/host-var | artefact |
+| D7 | risk_export.jsonld copy: HybridCloud HostSystemFilesExposed Moderate->Critical | kb |
 
 ## Bidirectional risk progression (the arc)
 
@@ -69,22 +69,22 @@ Each row is a separate run; cells show `likelihood/risk-level` per attack action
 
 | direction | step | change | scenario | #Unknown | PtraceInjection | DataFromLocalSystem | ExploitPublicFacingApp | PtraceProcessDiscovery |
 |---|---|---|---|---|---|---|---|---|
-| ↑ risk | DEGRADE_BREACH | assume-breach (all Dissatisfied) | High Risk Scenario | 0 | VeryLikely/Major | VeryLikely/Significant | VeryLikely/Major | Possible/Moderate |
-| ↑ risk | DEGRADE_TECH | technical controls verified absent | Rapid Prototype Scenario | 17 | VeryLikely/Major | VeryLikely/Significant | VeryLikely/Major | Possible/Moderate |
+| ↑ risk | D5 | assume-breach (all Dissatisfied) | High Risk Scenario | 0 | VeryLikely/Major | VeryLikely/Significant | VeryLikely/Major | Possible/Moderate |
+| ↑ risk | D4 | technical controls verified absent | Rapid Prototype Scenario | 17 | VeryLikely/Major | VeryLikely/Significant | VeryLikely/Major | Possible/Moderate |
 | — base | B0 | baseline (loose, no assumptions) | Hybrid Cloud Scenario | 43 | Possible/Significant | Possible/Moderate | Unlikely/Moderate | Unlikely/Moderate |
-| ↓ risk | HARDEN_ARTEFACT | + non-root + cap_drop (artefact) | Hybrid Cloud Scenario | 41 | Possible/Significant | Possible/Moderate | Unlikely/Moderate | Unlikely/Moderate |
-| ↓ risk | HARDEN_TECH | technical controls verified present | Balanced Container Security Scenario | 17 | VeryUnlikely/Moderate | VeryUnlikely/Minor | VeryUnlikely/Minor | VeryUnlikely/Minor |
-| ↓ risk | HARDEN_FULL | all controls verified present | Production Scenario | 0 | VeryUnlikely/Moderate | VeryUnlikely/Minor | VeryUnlikely/Minor | VeryUnlikely/Minor |
+| ↓ risk | D1 | + non-root + cap_drop (artefact) | Hybrid Cloud Scenario | 41 | Possible/Significant | Possible/Moderate | Unlikely/Moderate | Unlikely/Moderate |
+| ↓ risk | D2 | technical controls verified present | Balanced Container Security Scenario | 17 | VeryUnlikely/Moderate | VeryUnlikely/Minor | VeryUnlikely/Minor | VeryUnlikely/Minor |
+| ↓ risk | D3 | all controls verified present | Production Scenario | 0 | VeryUnlikely/Moderate | VeryUnlikely/Minor | VeryUnlikely/Minor | VeryUnlikely/Minor |
 
-HARDEN_ARTEFACT leaves every cell unchanged vs B0 (it only flips assumption states RTS-1/RTS-3 — see `results_summary.csv` `changes`); HARDEN_TECH improves every level and HARDEN_FULL holds at the floor while resolving all Unknowns; DEGRADE_TECH and DEGRADE_BREACH escalate every level. Rapid Prototype and High Risk (and Balanced vs Production) share these technical likelihoods — the factsheet still differs (scenario label + assumption states), which is itself a result: **governance/process assumptions refine the matched context, while the technical controls drive these container-escape likelihoods** (true in both directions).
+D1 leaves every cell unchanged vs B0 (it only flips assumption states RTS-1/RTS-3 — see `results_summary.csv` `changes`); D2 improves every level and D3 holds at the floor while resolving all Unknowns; D4 and D5 escalate every level. Rapid Prototype and High Risk (and Balanced vs Production) share these technical likelihoods — the factsheet still differs (scenario label + assumption states), which is itself a result: **governance/process assumptions refine the matched context, while the technical controls drive these container-escape likelihoods** (true in both directions).
 
 ## Unknown-resolution (providing assumptions)
 
 | run | scenario | Unknown | %Unknown |
 |---|---|---|---|
 | B0 (no assumptions) | Hybrid Cloud Scenario | 43 | 96% |
-| HARDEN_TECH | Balanced Container Security Scenario | 17 | 38% |
-| HARDEN_FULL | Production Scenario | 0 | 0% |
+| D2 | Balanced Container Security Scenario | 17 | 38% |
+| D3 | Production Scenario | 0 | 0% |
 
 → Providing assumptions resolves Unknown 43→17→0 (96% → 38% → 0%) and improves the matched scenario Hybrid Cloud → Balanced → Production. Concrete "assumptions resolve the ~85% Unknown" evidence.
 
@@ -92,15 +92,15 @@ HARDEN_ARTEFACT leaves every cell unchanged vs B0 (it only flips assumption stat
 
 | delta | mechanism | scenario change | assumptions changed | actions | risk-level change | effect |
 |---|---|---|---|---|---|---|
-| HARDEN_ARTEFACT | artefact (harden) | no | 2 | 4→4 | no | non-root + cap_drop recorded (RTS-1/RTS-3 Satisfied); levels unchanged |
-| HARDEN_TECH | assumption (harden) | yes | 27 | 4→4 | yes | **every level improves** (Possible→VeryUnlikely) |
-| HARDEN_FULL | assumption (harden) | yes | 44 | 4→4 | yes | all Unknowns resolved; levels at floor |
-| DEGRADE_TECH | assumption (degrade) | yes | 27 | 4→4 | yes | **every level escalates** (Possible→VeryLikely) |
-| DEGRADE_BREACH | assumption (degrade) | yes | 44 | 4→4 | yes | **every level escalates** (→VeryLikely); High Risk scenario |
-| REMOVE_VOLUME | artefact (harden) | no | 0 | 4→3 | no | host-files risk **removed** (4→3 actions) |
-| KB_IMPACT | kb (kb) | no | 0 | 4→4 | yes | host-files **impact Moderate→Critical** (knowledge level) |
+| D1 | artefact (harden) | no | 2 | 4→4 | no | non-root + cap_drop recorded (RTS-1/RTS-3 Satisfied); levels unchanged |
+| D2 | assumption (harden) | yes | 27 | 4→4 | yes | **every level improves** (Possible→VeryUnlikely) |
+| D3 | assumption (harden) | yes | 44 | 4→4 | yes | all Unknowns resolved; levels at floor |
+| D4 | assumption (degrade) | yes | 27 | 4→4 | yes | **every level escalates** (Possible→VeryLikely) |
+| D5 | assumption (degrade) | yes | 44 | 4→4 | yes | **every level escalates** (→VeryLikely); High Risk scenario |
+| D6 | artefact (harden) | no | 0 | 4→3 | no | host-files risk **removed** (4→3 actions) |
+| D7 | kb (kb) | no | 0 | 4→4 | yes | host-files **impact Moderate→Critical** (knowledge level) |
 
-**Reading.** HARDEN_ARTEFACT confirms that *technical hardening is recorded in the factsheet (assumption states flip to Satisfied) but a couple of artefact-level assumptions do not re-select the scenario, so the four risks' likelihood is unchanged* — risk levels move only once a breadth of assumptions is set, in either direction (HARDEN_TECH ↓ / DEGRADE_TECH ↑). REMOVE_VOLUME changes the risk **set** (selective removal) without touching the scenario. KB_IMPACT is the only impact mover (knowledge level). Some scenarios share identical ratings (Balanced≡Production, Rapid Prototype≡High Risk for these techniques) — the factsheet still changes, which is itself a result.
+**Reading.** D1 confirms that *technical hardening is recorded in the factsheet (assumption states flip to Satisfied) but a couple of artefact-level assumptions do not re-select the scenario, so the four risks' likelihood is unchanged* — risk levels move only once a breadth of assumptions is set, in either direction (D2 ↓ / D4 ↑). D6 changes the risk **set** (selective removal) without touching the scenario. D7 is the only impact mover (knowledge level). Some scenarios share identical ratings (Balanced≡Production, Rapid Prototype≡High Risk for these techniques) — the factsheet still changes, which is itself a result.
 
 ## Design rationale (why these deltas, and why this baseline)
 
@@ -108,9 +108,9 @@ HARDEN_ARTEFACT leaves every cell unchanged vs B0 (it only flips assumption stat
 
 **Why the loose baseline.** A fully-hardened baseline sits deep in a single scenario's basin (a near-exact profile match scores ~135 with 45 perfect matches), so no single delta can dislodge it. B0 is instead the loosely-configured deployment with **no assumptions supplied** — the natural starting point of an assessment, which the tool matches to *Hybrid Cloud* (the all-Unknown default, 43/45 Unknown). From there the assumption profile can move the matched scenario in either direction with realistic, single-variable edits, and supplying `assumptions.conf` becomes a delta in its own right rather than part of the baseline.
 
-**Why bundle the artefact hardening.** Running as non-root and dropping capabilities are two technically-detectable measures (they flip RTS-1 and RTS-3). Individually or together they are recorded but do not re-select the scenario, so they are presented as one `HARDEN_ARTEFACT` step — its purpose is precisely to show that *recorded posture improvements need not change the risk levels until a breadth of assumptions is set*. (Note: the runs-as-non-root signal comes from the Compose `user:` field, not the Dockerfile `USER` directive.)
+**Why bundle the artefact hardening.** Running as non-root and dropping capabilities are two technically-detectable measures (they flip RTS-1 and RTS-3). Individually or together they are recorded but do not re-select the scenario, so they are presented as one `D1` step — its purpose is precisely to show that *recorded posture improvements need not change the risk levels until a breadth of assumptions is set*. (Note: the runs-as-non-root signal comes from the Compose `user:` field, not the Dockerfile `USER` directive.)
 
-**Why the symmetric assumption deltas.** HARDEN_TECH and DEGRADE_TECH set the *same* five technical control families to Satisfied vs Dissatisfied — an exact inverse that re-selects the scenario in opposite directions (→ Balanced / → Rapid Prototype), cleanly isolating the effect of verifying controls present vs absent. HARDEN_FULL and DEGRADE_BREACH are the end anchors (Production / High Risk).
+**Why the symmetric assumption deltas.** D2 and D4 set the *same* five technical control families to Satisfied vs Dissatisfied — an exact inverse that re-selects the scenario in opposite directions (→ Balanced / → Rapid Prototype), cleanly isolating the effect of verifying controls present vs absent. D3 and D5 are the end anchors (Production / High Risk).
 
 ## Findings & current tool scope
 
@@ -131,11 +131,13 @@ Distinct canonical SHA-256 hashes of the factsheet across *N separate container 
 | config | N | distinct canonical hashes |
 |---|---|---|
 | B0 | 20 | 1 |
-| HARDEN_TECH | 5 | 1 |
-| HARDEN_FULL | 5 | 1 |
-| DEGRADE_TECH | 5 | 1 |
-| DEGRADE_BREACH | 5 | 1 |
-| KB_IMPACT | 5 | 1 |
+| D1 | 5 | 1 |
+| D2 | 5 | 1 |
+| D3 | 5 | 1 |
+| D4 | 5 | 1 |
+| D5 | 5 | 1 |
+| D6 | 5 | 1 |
+| D7 | 5 | 1 |
 
 → **1 distinct hash everywhere** — byte-stable across processes and hash seeds (ordered JSON-LD `@graph` traversal, dict-index lookups, no SPARQL/RNG/timestamps). Raw bytes matched too.
 

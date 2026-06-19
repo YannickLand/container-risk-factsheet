@@ -1,2 +1,0 @@
-{"delta_id":"HARDEN_TECH","tool_commit":"8b684ee","image_digest":"sha256:a041e5e7479be1d780fd3173de21aa9f65befdf80839706f2c40d2fc72af5896","wall_clock_seconds":1.731,
- "exit_code":0,"overrides":"assumptions.conf","kb_file":"baked in image (unedited KB)"}

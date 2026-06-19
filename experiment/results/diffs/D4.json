@@ -3,8 +3,8 @@
   "actions_removed": [],
   "assumption_counts": {
     "after": {
-      "Dissatisfied": 0,
-      "Satisfied": 28,
+      "Dissatisfied": 28,
+      "Satisfied": 0,
       "Unknown": 17
     },
     "before": {
@@ -18,270 +18,270 @@
       "assumption": "AUTH_1",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "AUTH_2",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "AUTH_3",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "IMG_1",
+      "state": [
+        "Satisfied",
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "IMG_2",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "IMG_3",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "IMG_4",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "IMG_5",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "IMG_6",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "MON_1",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "MON_2",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "MON_3",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "MON_4",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "MON_5",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "MON_6",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "MON_7",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "MON_8",
       "state": [
         "Unknown",
-        "Satisfied"
-      ]
-    },
-    {
-      "assumption": "NET_1",
-      "state": [
-        "Dissatisfied",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "NET_2",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "NET_3",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "NET_4",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "RTS_1",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "RTS_2",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "RTS_3",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "RTS_4",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "RTS_5",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "RTS_6",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "RTS_7",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     }
   ],
-  "canon_hash_after": "3ee5954a5ebe2ac6c5ea26ade270cac6eaefa93cd500f2765c66c8a95bcda73f",
+  "canon_hash_after": "6fc1ba86267b5a6d4525537685deb51a5538c5be9886b91ff078e2934ff290da",
   "canon_hash_before": "116313bd3f497cf5f3a157c597d096b8dc14d9cfeeb059ef3782c822b2d49486",
-  "delta_id": "HARDEN_TECH",
+  "delta_id": "D4",
   "impact_changes": [],
-  "notes": "Verify the technical control families. Enough assumptions resolve that the scenario re-selects Hybrid Cloud -> Balanced and every risk level improves (likelihood Possible -> VeryUnlikely).",
+  "notes": "The inverse of D2: the technical control families are verified ABSENT. Scenario re-selects Hybrid Cloud -> Rapid Prototype and every risk level rises (likelihood Possible -> VeryLikely).",
   "rating_changes": [
     {
       "exploitability": [
         "MediumExploitability",
-        "LowExploitability"
+        "HighExploitability"
       ],
       "exposure": [
         "MediumExposure",
-        "LowExposure"
+        "HighExposure"
       ],
       "likelihood": [
         "Possible",
-        "VeryUnlikely"
+        "VeryLikely"
       ],
       "risk_level": [
         "Significant",
-        "Moderate"
+        "Major"
       ],
       "technique": "ContainerPtraceInjection"
     },
     {
       "exploitability": [
         "MediumExploitability",
-        "LowExploitability"
+        "HighExploitability"
       ],
       "exposure": [
         "MediumExposure",
-        "LowExposure"
+        "HighExposure"
       ],
       "likelihood": [
         "Possible",
-        "VeryUnlikely"
+        "VeryLikely"
       ],
       "risk_level": [
         "Moderate",
-        "Minor"
+        "Significant"
       ],
       "technique": "ContainerDataFromLocalSystem"
     },
     {
+      "exploitability": [
+        "LowExploitability",
+        "HighExploitability"
+      ],
       "exposure": [
         "MediumExposure",
-        "LowExposure"
+        "HighExposure"
       ],
       "likelihood": [
         "Unlikely",
-        "VeryUnlikely"
+        "VeryLikely"
       ],
       "risk_level": [
         "Moderate",
-        "Minor"
+        "Major"
       ],
       "technique": "ContainerExploitPublicFacingApp"
     },
     {
       "exposure": [
         "MediumExposure",
-        "LowExposure"
+        "HighExposure"
       ],
       "likelihood": [
         "Unlikely",
-        "VeryUnlikely"
-      ],
-      "risk_level": [
-        "Moderate",
-        "Minor"
+        "Possible"
       ],
       "technique": "ContainerPtraceProcessDiscovery"
     }
   ],
   "reference_baseline": "B0",
   "scenario": {
-    "after": "Balanced Container Security Scenario",
+    "after": "Rapid Prototype Scenario",
     "before": "Hybrid Cloud Scenario"
   },
   "scenario_changed": true,

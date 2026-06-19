@@ -25,10 +25,12 @@ det() {  # det <id> <N> <overrides? yes|-> <kb|->
   echo "$id,$N,$d,${hashes[0]}" >> "$TMP/determinism_results.csv"
 }
 echo "=== determinism check ==="
-det B0             20 -   -
-det HARDEN_TECH     5 yes -
-det HARDEN_FULL     5 yes -
-det DEGRADE_TECH    5 yes -
-det DEGRADE_BREACH  5 yes -
-det KB_IMPACT       5 -   kb/d6_data
+det B0  20 -   -
+det D1   5 -   -            # artefact hardening: non-root + cap_drop ALL
+det D2   5 yes -            # technical families Satisfied
+det D3   5 yes -            # all families Satisfied
+det D4   5 yes -            # technical families Dissatisfied
+det D5   5 yes -            # all families Dissatisfied
+det D6   5 -   -            # remove host volume
+det D7   5 -   kb/d6_data   # KB impact edit
 rm -f "$TMP/cur.json"; echo "DONE."

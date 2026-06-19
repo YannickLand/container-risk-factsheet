@@ -3,8 +3,8 @@
   "actions_removed": [],
   "assumption_counts": {
     "after": {
-      "Dissatisfied": 0,
-      "Satisfied": 45,
+      "Dissatisfied": 45,
+      "Satisfied": 0,
       "Unknown": 0
     },
     "before": {
@@ -18,389 +18,389 @@
       "assumption": "AUTH_1",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "AUTH_2",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "AUTH_3",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "CIC_1",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "CIC_2",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "CIC_3",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "CIC_4",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "CIC_5",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "CIC_6",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "CRM_1",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "CRM_2",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "CRM_3",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "CRM_4",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "HIS_1",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "HIS_2",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "HIS_3",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
+      ]
+    },
+    {
+      "assumption": "IMG_1",
+      "state": [
+        "Satisfied",
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "IMG_2",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "IMG_3",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "IMG_4",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "IMG_5",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "IMG_6",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "MON_1",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "MON_2",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "MON_3",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "MON_4",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "MON_5",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "MON_6",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "MON_7",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "MON_8",
       "state": [
         "Unknown",
-        "Satisfied"
-      ]
-    },
-    {
-      "assumption": "NET_1",
-      "state": [
-        "Dissatisfied",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "NET_2",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "NET_3",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "NET_4",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "RTS_1",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "RTS_2",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "RTS_3",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "RTS_4",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "RTS_5",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "RTS_6",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "RTS_7",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "SCM_1",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "SCM_2",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "SCM_3",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     },
     {
       "assumption": "SCM_4",
       "state": [
         "Unknown",
-        "Satisfied"
+        "Dissatisfied"
       ]
     }
   ],
-  "canon_hash_after": "c2878686be52ed29b0971ad1a649b6ea9366d231ef4f8ec6ec4262ec583f95b6",
+  "canon_hash_after": "1e00ed7f4bd1def16894def583b0ab5bfd6f550c8424f55edb97da2429129a23",
   "canon_hash_before": "116313bd3f497cf5f3a157c597d096b8dc14d9cfeeb059ef3782c822b2d49486",
-  "delta_id": "HARDEN_FULL",
+  "delta_id": "D5",
   "impact_changes": [],
-  "notes": "Verify governance/process too. Scenario -> Production; all 45 assumptions Satisfied (0 Unknown). Risk already at the floor — governance refines the context without lowering these technical likelihoods further.",
+  "notes": "Assume-breach: no control family can be relied upon. Scenario -> High Risk; likelihood VeryLikely. (Same likelihood as Rapid Prototype for these techniques — governance refines the scenario, not the technical likelihood, mirroring the hardening side.)",
   "rating_changes": [
     {
       "exploitability": [
         "MediumExploitability",
-        "LowExploitability"
+        "HighExploitability"
       ],
       "exposure": [
         "MediumExposure",
-        "LowExposure"
+        "HighExposure"
       ],
       "likelihood": [
         "Possible",
-        "VeryUnlikely"
+        "VeryLikely"
       ],
       "risk_level": [
         "Significant",
-        "Moderate"
+        "Major"
       ],
       "technique": "ContainerPtraceInjection"
     },
     {
       "exploitability": [
         "MediumExploitability",
-        "LowExploitability"
+        "HighExploitability"
       ],
       "exposure": [
         "MediumExposure",
-        "LowExposure"
+        "HighExposure"
       ],
       "likelihood": [
         "Possible",
-        "VeryUnlikely"
+        "VeryLikely"
       ],
       "risk_level": [
         "Moderate",
-        "Minor"
+        "Significant"
       ],
       "technique": "ContainerDataFromLocalSystem"
     },
     {
+      "exploitability": [
+        "LowExploitability",
+        "HighExploitability"
+      ],
       "exposure": [
         "MediumExposure",
-        "LowExposure"
+        "HighExposure"
       ],
       "likelihood": [
         "Unlikely",
-        "VeryUnlikely"
+        "VeryLikely"
       ],
       "risk_level": [
         "Moderate",
-        "Minor"
+        "Major"
       ],
       "technique": "ContainerExploitPublicFacingApp"
     },
     {
       "exposure": [
         "MediumExposure",
-        "LowExposure"
+        "HighExposure"
       ],
       "likelihood": [
         "Unlikely",
-        "VeryUnlikely"
-      ],
-      "risk_level": [
-        "Moderate",
-        "Minor"
+        "Possible"
       ],
       "technique": "ContainerPtraceProcessDiscovery"
     }
   ],
   "reference_baseline": "B0",
   "scenario": {
-    "after": "Production Scenario",
+    "after": "High Risk Scenario",
     "before": "Hybrid Cloud Scenario"
   },
   "scenario_changed": true,
