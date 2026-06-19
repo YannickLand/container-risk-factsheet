@@ -8,8 +8,8 @@ The experiment changes one thing at a time (a *delta*) to a container deployment
 
 ## Provenance & reproduction
 
-- **Tool image:** `container-risk-factsheet-api:latest` — digest `sha256:a041e5e7479be1d780fd3173de21aa9f65befdf80839706f2c40d2fc72af5896` (built from `docker-compose.yml`; bundles **hadolint v2.12.0**).
-- **Tool commit:** `120dd5d`. **KB:** `data/.../15_full_csro/risk_export.jsonld` (baked into the image; D7 mounts an edited copy via `--data-dir`).
+- **Tool image:** `container-risk-factsheet-api:latest` — digest `sha256:8b1ba6602bd1a90b9ee9714347706bdc851f96da1484c759e94361cb7ad4161b` (built from `docker-compose.yml`; bundles **hadolint v2.12.0**).
+- **Tool commit:** `9fb357c`. **KB:** `data/.../15_full_csro/risk_export.jsonld` (baked into the image; D7 mounts an edited copy via `--data-dir`).
 - **Invocation:** each run is one *separate* `docker run` of the image's `factsheet` CLI (`python -m factsheet.cli generate-factsheet ... --no-pretty`). The live API server (`docker compose up` → `POST /api/v1/generate-factsheet`) uses the identical in-process code path.
 - **Reproduce:** `docker compose build api` then `bash experiment/run_all.sh && bash experiment/determinism.sh && python experiment/rollup.py`.
 

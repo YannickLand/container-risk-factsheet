@@ -205,7 +205,7 @@
     }
   ],
   "canon_hash_after": "6fc1ba86267b5a6d4525537685deb51a5538c5be9886b91ff078e2934ff290da",
-  "canon_hash_before": "116313bd3f497cf5f3a157c597d096b8dc14d9cfeeb059ef3782c822b2d49486",
+  "canon_hash_before": "6c7619120537a4ad3e1d4e5d248db5816c71845d15f66de427bf5a0d2deb4ced",
   "delta_id": "D4",
   "impact_changes": [],
   "notes": "The inverse of D2: the technical control families are verified ABSENT. Scenario re-selects Hybrid Cloud -> Rapid Prototype and every risk level rises (likelihood Possible -> VeryLikely).",
@@ -285,5 +285,21 @@
     "before": "Hybrid Cloud Scenario"
   },
   "scenario_changed": true,
+  "treatment_changes": [
+    {
+      "added": [
+        "Scan Container Images"
+      ],
+      "removed": [],
+      "technique": "ContainerExploitPublicFacingApp"
+    },
+    {
+      "added": [
+        "Scan Container Images"
+      ],
+      "removed": [],
+      "technique": "ContainerPtraceInjection"
+    }
+  ],
   "unchanged_actions": []
 }

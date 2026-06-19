@@ -204,8 +204,8 @@
       ]
     }
   ],
-  "canon_hash_after": "3ee5954a5ebe2ac6c5ea26ade270cac6eaefa93cd500f2765c66c8a95bcda73f",
-  "canon_hash_before": "116313bd3f497cf5f3a157c597d096b8dc14d9cfeeb059ef3782c822b2d49486",
+  "canon_hash_after": "3f95e2426e862f66ba8764bda0608d272f2fcff1b7dd09271c044e0058cf5076",
+  "canon_hash_before": "6c7619120537a4ad3e1d4e5d248db5816c71845d15f66de427bf5a0d2deb4ced",
   "delta_id": "D2",
   "impact_changes": [],
   "notes": "Verify the technical control families. Enough assumptions resolve that the scenario re-selects Hybrid Cloud -> Balanced and every risk level improves (likelihood Possible -> VeryUnlikely).",
@@ -285,5 +285,109 @@
     "before": "Hybrid Cloud Scenario"
   },
   "scenario_changed": true,
+  "treatment_changes": [
+    {
+      "added": [],
+      "removed": [
+        "Alert Unauthorized Access",
+        "Centralize And Protect Logs",
+        "Configure Host Firewall",
+        "Deploy Decoy Containers",
+        "Enable Container Logging",
+        "Encrypt Inter Container Communication",
+        "Enforce API Authentication",
+        "Implement App Armor",
+        "Implement Incident Response",
+        "Implement Ingress Egress Controls",
+        "Implement RBAC",
+        "Implement SELinux",
+        "Implement Seccomp",
+        "Minimize Capabilities",
+        "Minimize Host Resource Access",
+        "Monitor API And Orchestration",
+        "Monitor Process Behavior",
+        "Restrict Management Access",
+        "Run As Non Root User",
+        "Segment Networks",
+        "Use Runtime Security Tools"
+      ],
+      "technique": "ContainerDataFromLocalSystem"
+    },
+    {
+      "added": [],
+      "removed": [
+        "Alert Unauthorized Access",
+        "Centralize And Protect Logs",
+        "Configure Host Firewall",
+        "Deploy Decoy Containers",
+        "Enable Container Logging",
+        "Encrypt Inter Container Communication",
+        "Enforce API Authentication",
+        "Implement Incident Response",
+        "Implement Ingress Egress Controls",
+        "Implement RBAC",
+        "Monitor API And Orchestration",
+        "Monitor Process Behavior",
+        "Pin Base Image Versions",
+        "Rebuild Images Regularly",
+        "Restrict Management Access",
+        "Segment Networks",
+        "Sign And Verify Images",
+        "Use Minimal Base Images",
+        "Use Runtime Security Tools",
+        "Use Trusted Registries"
+      ],
+      "technique": "ContainerExploitPublicFacingApp"
+    },
+    {
+      "added": [],
+      "removed": [
+        "Alert Unauthorized Access",
+        "Centralize And Protect Logs",
+        "Configure Host Firewall",
+        "Deploy Decoy Containers",
+        "Enable Container Logging",
+        "Enable Read Only Filesystem",
+        "Encrypt Inter Container Communication",
+        "Enforce API Authentication",
+        "Implement Incident Response",
+        "Implement Ingress Egress Controls",
+        "Implement Seccomp",
+        "Minimize Capabilities",
+        "Monitor API And Orchestration",
+        "Monitor Process Behavior",
+        "Pin Base Image Versions",
+        "Rebuild Images Regularly",
+        "Run As Non Root User",
+        "Segment Networks",
+        "Sign And Verify Images",
+        "Use Minimal Base Images",
+        "Use Runtime Security Tools",
+        "Use Trusted Registries"
+      ],
+      "technique": "ContainerPtraceInjection"
+    },
+    {
+      "added": [],
+      "removed": [
+        "Alert Unauthorized Access",
+        "Centralize And Protect Logs",
+        "Configure Host Firewall",
+        "Deploy Decoy Containers",
+        "Enable Container Logging",
+        "Encrypt Inter Container Communication",
+        "Enforce API Authentication",
+        "Implement Incident Response",
+        "Implement Ingress Egress Controls",
+        "Implement RBAC",
+        "Monitor API And Orchestration",
+        "Monitor Process Behavior",
+        "Restrict Management Access",
+        "Segment Networks",
+        "Use Runtime Security Tools"
+      ],
+      "technique": "ContainerPtraceProcessDiscovery"
+    }
+  ],
   "unchanged_actions": []
 }

@@ -29,8 +29,8 @@
       ]
     }
   ],
-  "canon_hash_after": "9ddf6bba9d23858508380c57076ec7f53ebb4f06400bc952109ee5af2ce66739",
-  "canon_hash_before": "116313bd3f497cf5f3a157c597d096b8dc14d9cfeeb059ef3782c822b2d49486",
+  "canon_hash_after": "fc468b6dc6aaf974597246726b35cebb5eb73958b6efc08674ea3c63d3fa3ea7",
+  "canon_hash_before": "6c7619120537a4ad3e1d4e5d248db5816c71845d15f66de427bf5a0d2deb4ced",
   "delta_id": "D1",
   "impact_changes": [],
   "notes": "Bundled technical hardening (run as non-root + drop all capabilities). RTS-1 and RTS-3 flip Unknown->Satisfied; scenario stays Hybrid Cloud and risk levels are unchanged — the measures are recorded in the factsheet's assumption states, but two artefact-level assumptions do not re-select the scenario.",
@@ -41,6 +41,24 @@
     "before": "Hybrid Cloud Scenario"
   },
   "scenario_changed": false,
+  "treatment_changes": [
+    {
+      "added": [],
+      "removed": [
+        "Minimize Capabilities",
+        "Run As Non Root User"
+      ],
+      "technique": "ContainerDataFromLocalSystem"
+    },
+    {
+      "added": [],
+      "removed": [
+        "Minimize Capabilities",
+        "Run As Non Root User"
+      ],
+      "technique": "ContainerPtraceInjection"
+    }
+  ],
   "unchanged_actions": [
     "ContainerDataFromLocalSystem",
     "ContainerExploitPublicFacingApp",
