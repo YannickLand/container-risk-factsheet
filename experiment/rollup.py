@@ -56,6 +56,15 @@ def summarise(rid):
     for a in svc.get("PossibleAttackActions", []):
         impact = a.get("csro:causesImpact", {})
         ir = rl = ""
+        treatments = []
+        if isinstance(impact, dict):
+            _ind = impact.get("csro:indicates", {})
+            if isinstance(_ind, dict):
+                treatments = sorted(
+                    t.get("rdfs:label", "")
+                    for t in _ind.get("csro:isTreatedBy", [])
+                    if isinstance(t, dict) and t.get("rdfs:label")
+                )
         if isinstance(impact, dict):
             ir = _id(impact.get("csro:hasImpactRating", {}))
             ind = impact.get("csro:indicates", {})
@@ -67,6 +76,7 @@ def summarise(rid):
             "exposure": _id(a.get("csro:hasExposureRating", {})),
             "likelihood": _id(a.get("csro:hasLikelihood", {})),
             "impact_rating": ir, "risk_level": rl,
+            "treatments": treatments,
         })
     return {
         "service": name,
@@ -100,6 +110,13 @@ def diff(before_id, after_id, delta_id, note=""):
     for k, v in b["assum_states"].items():
         if a["assum_states"].get(k) != v:
             assum_changes.append({"assumption": k, "state": [v, a["assum_states"].get(k)]})
+    # treatment-list transitions (treatments are pruned once their assumption is Satisfied)
+    treatment_changes = []
+    for x in common:
+        bset = set(b["actions"][x]["treatments"]); aset = set(a["actions"][x]["treatments"])
+        removed = sorted(bset - aset); added = sorted(aset - bset)
+        if removed or added:
+            treatment_changes.append({"technique": short(x), "removed": removed, "added": added})
     nchg = len(rating_changes) + len(impact_changes) + len(add) + len(rem)
     out = {
         "delta_id": delta_id, "reference_baseline": before_id,
@@ -109,6 +126,7 @@ def diff(before_id, after_id, delta_id, note=""):
         "assumption_state_changes": sorted(assum_changes, key=lambda x: x["assumption"]),
         "actions_removed": sorted(rem), "actions_added": sorted(add),
         "rating_changes": rating_changes, "impact_changes": impact_changes,
+        "treatment_changes": sorted(treatment_changes, key=lambda x: x["technique"]),
         "unchanged_actions": sorted(unchanged),
         "canon_hash_before": b["canon_hash"], "canon_hash_after": a["canon_hash"],
         "notes": note,

@@ -111,6 +111,13 @@ def generate_factsheet(
             model, trait_ids, best_scenario_id
         )
 
+        # 4e. Surface only outstanding treatments: drop treatments whose
+        # addressed assumption is already Satisfied (e.g. once the deployment
+        # runs as non-root, "Run As Non Root User" is no longer suggested).
+        _prune_satisfied_treatments(
+            attack_actions, _satisfied_assumption_ids(assumption_states)
+        )
+
         result[svc_name] = {
             "ContainerSecurityAssumptionStates": assumption_states,
             "DeploymentTraits": traits,
@@ -131,6 +138,59 @@ def generate_factsheet_from_file(
     with open(compose_path, "r", encoding="utf-8") as fh:
         compose = yaml.safe_load(fh)
     return generate_factsheet(compose, overrides=overrides, data_dir=data_dir, dockerfiles=dockerfiles)
+
+
+# ---------------------------------------------------------------------------
+# Treatment pruning
+# ---------------------------------------------------------------------------
+
+def _satisfied_assumption_ids(assumption_states: list[dict]) -> set[str]:
+    """Return the set of assumption ``@id``s whose state is Satisfied."""
+    return {
+        state.get("AssumptionID", "")
+        for state in assumption_states
+        if state.get("CalculatedSatisfactionState") == "Satisfied"
+        and state.get("AssumptionID")
+    }
+
+
+def _treatment_addresses_id(treatment: dict) -> str:
+    """Return the ``@id`` of the assumption a treatment addresses, or ''."""
+    addresses = treatment.get("csro:addresses")
+    if isinstance(addresses, dict):
+        return addresses.get("@id", "")
+    return ""
+
+
+def _prune_satisfied_treatments(
+    attack_actions: list[dict], satisfied_ids: set[str]
+) -> None:
+    """
+    Drop treatments whose addressed assumption is already Satisfied.
+
+    The factsheet should surface only outstanding, actionable treatments, so a
+    treatment addressing an assumption that is already verified as Satisfied is
+    removed from every affected risk's ``csro:isTreatedBy`` list.  Treatments
+    without a resolvable addressed assumption are retained.  The operation
+    preserves list order and is therefore deterministic.
+    """
+    if not satisfied_ids:
+        return
+    for action in attack_actions:
+        impact = action.get("csro:causesImpact")
+        if not isinstance(impact, dict):
+            continue
+        risk = impact.get("csro:indicates")
+        if not isinstance(risk, dict):
+            continue
+        treatments = risk.get("csro:isTreatedBy")
+        if not isinstance(treatments, list):
+            continue
+        risk["csro:isTreatedBy"] = [
+            t
+            for t in treatments
+            if _treatment_addresses_id(t) not in satisfied_ids
+        ]
 
 
 # ---------------------------------------------------------------------------
