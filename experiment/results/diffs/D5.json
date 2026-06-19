@@ -324,7 +324,7 @@
     }
   ],
   "canon_hash_after": "1e00ed7f4bd1def16894def583b0ab5bfd6f550c8424f55edb97da2429129a23",
-  "canon_hash_before": "116313bd3f497cf5f3a157c597d096b8dc14d9cfeeb059ef3782c822b2d49486",
+  "canon_hash_before": "6c7619120537a4ad3e1d4e5d248db5816c71845d15f66de427bf5a0d2deb4ced",
   "delta_id": "D5",
   "impact_changes": [],
   "notes": "Assume-breach: no control family can be relied upon. Scenario -> High Risk; likelihood VeryLikely. (Same likelihood as Rapid Prototype for these techniques — governance refines the scenario, not the technical likelihood, mirroring the hardening side.)",
@@ -404,5 +404,21 @@
     "before": "Hybrid Cloud Scenario"
   },
   "scenario_changed": true,
+  "treatment_changes": [
+    {
+      "added": [
+        "Scan Container Images"
+      ],
+      "removed": [],
+      "technique": "ContainerExploitPublicFacingApp"
+    },
+    {
+      "added": [
+        "Scan Container Images"
+      ],
+      "removed": [],
+      "technique": "ContainerPtraceInjection"
+    }
+  ],
   "unchanged_actions": []
 }
